@@ -2819,9 +2819,9 @@ __metadata:
   linkType: hard
 
 "@types/mocha@npm:^10.0.7":
-  version: 10.0.7
-  resolution: "@types/mocha@npm:10.0.7"
-  checksum: 5e411ed8aa19228e322b2fb0075c4d822322fb157d1adfc8620a798748035d430dc16421bdc7d7f84f118481b8c8c63ec86b95757a8acc926ddc3d737fbffc3a
+  version: 10.0.9
+  resolution: "@types/mocha@npm:10.0.9"
+  checksum: cd15e7df49338466e75c580991d8fb3f86dad567f3abd6ca6489c0875b8af44f57a95167552fab7bbc950f53f97596be30b3507a9c16e0dc8d41a2d1e23b169d
   languageName: node
   linkType: hard
 
