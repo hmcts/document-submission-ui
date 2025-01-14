@@ -107,6 +107,10 @@ const en = {
   apmCookiesHeadings: 'Allow cookies that measure website application performance monitoring?',
   useApmCookies: 'Use cookies that measure website application performance monitoring',
   doNotUseApmCookies: 'Do not use cookies that measure website application performance monitoring',
+  cookiesAcceptedPart1: 'You’ve accepted additional cookies. You can',
+  cookiesAcceptorRejectPart2: 'change your cookie settings',
+  cookiesAcceptorRejectPart3: 'at any time.',
+  cookiesRejectedPart1: 'You’ve rejected additional cookies. You can',
 };
 
 const cy: typeof en = {

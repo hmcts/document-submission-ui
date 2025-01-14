@@ -4,8 +4,7 @@
 {% extends "common/page.njk" %}
 
 {% block page_content %}
-{% if cookieMessage == true%}
-  <div class="cookie-preference-success-s" style="display: block;">
+  <div class="cookie-preference-success">
     <div class="success-message" aria-labelledby="success-title" role="alert" tabindex="-1">
       <h2 class="govuk-heading-m">
         {{ cookiesSaved }}
@@ -16,7 +15,6 @@
       <a class="govuk-link" href="/">{{ goToHomepage }}</a>
     </div>
   </div>
-{%endif%}
 
   <section>
     <h1 class="govuk-heading-l">{{ title }}</h1>
@@ -189,35 +187,35 @@
     <form class="cookie-preferences-form js-show">
 
       {% set cookiesAnalytics = cookiePrefrences['analytics'] %}
-    
 
-      {% set AnalyticsData =  []  %}
+      {% set AnalyticsData = [] %}
 
       {% if  cookiesAnalytics == 'on'%}
-      {% set AnalyticsData = [{
+        {% set AnalyticsData = [
+          {
             value: 'on',
             text: useAnalyticsCookies,
             checked: true
-          },
-          {
+          }, {
             value: 'off',
             text: doNotUseAnalyticsCookies
-          }] 
-      %}
-      {%else%}
-       {% set AnalyticsData = [{
+          }
+        ]
+ %}
+        {%else%}
+        {% set AnalyticsData = [
+          {
             value: 'on',
             text: useAnalyticsCookies
-          },
-          {
+          }, {
             value: 'off',
             text: doNotUseAnalyticsCookies,
             checked: true
-          }] %}
-      {%endif%}
+          }
+        ] %}
+        {%endif%}
 
-
-      {{ govukRadios({
+        {{ govukRadios({
         classes: 'govuk-radios',
         idPrefix: 'analytics',
         name: 'analytics',
@@ -230,37 +228,36 @@
         items: AnalyticsData
       }) }}
 
+        {% set cookiesApm = cookiePrefrences['apm'] %}
 
+        {% set APMData =  []%}
 
-    {% set cookiesApm = cookiePrefrences['apm'] %}
-
-      {% set APMData =  []%}
-
-    {% if  cookiesApm == 'on'%}
-          {% set APMData = [{
-                value: 'on',
-                text: useApmCookies,
-                checked: true
-              },
-              {
-                value: 'off',
-                text: doNotUseApmCookies
-              }] 
-          %}
+        {% if  cookiesApm == 'on'%}
+          {% set APMData = [
+            {
+              value: 'on',
+              text: useApmCookies,
+              checked: true
+            }, {
+              value: 'off',
+              text: doNotUseApmCookies
+            }
+          ]
+ %}
           {%else%}
-          {% set APMData = [{
-                value: 'on',
-                text: useApmCookies
-              },
-              {
-                value: 'off',
-                text: doNotUseApmCookies,
-                checked: true
-              }] %}
-      {%endif%}
+          {% set APMData = [
+            {
+              value: 'on',
+              text: useApmCookies
+            }, {
+              value: 'off',
+              text: doNotUseApmCookies,
+              checked: true
+            }
+          ] %}
+          {%endif%}
 
-
-      {{ govukRadios({
+          {{ govukRadios({
         classes: 'govuk-radios',
         idPrefix: 'apm',
         name: 'apm',
@@ -272,9 +269,9 @@
         },
         items: APMData
       }) }}
-      {{ govukButton({
+          {{ govukButton({
         text: save
       }) }}
-    </form>
-  </section>
-{% endblock %}
+        </form>
+      </section>
+    {% endblock %}
