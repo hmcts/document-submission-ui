@@ -58,6 +58,6 @@ export const generateContent: TranslationFn = content => {
   const translationContent = languages[content.language]();
   return {
     ...translationContent,
-    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}) },
+    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}, content.additionalData?.req) },
   };
 };

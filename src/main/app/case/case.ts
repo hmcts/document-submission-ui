@@ -25,6 +25,25 @@ export type FieldFormats = Record<string, string | ((AnyObject) => AnyObject)>;
 export interface CaseWithId extends Case {
   id: string;
   state: any;
+  paymentDetails?: {
+    payment_reference: string;
+    date_created: string;
+    external_reference: string;
+    next_url: string;
+    status: string;
+    serviceRequestReference: string;
+  };
+  paymentSuccessDetails?: {
+    amount: string;
+    reference: string;
+    ccd_case_number: string;
+    case_reference: string;
+    channel: string;
+    method: string;
+    status: string;
+    external_reference: string;
+    payment_group_reference: string;
+  };
 }
 
 export interface CaseWithDocuments {
@@ -69,6 +88,7 @@ export interface Case {
   applicants?: Applicant[];
   caseTypeOfApplication?: string;
   typeOfApplication?: TYPE_OF_APPLICATION;
+  selectedCourt?: string;
   namedApplicant: YesOrNo;
   applicantFirstName: string;
   applicantLastName: string;
@@ -82,4 +102,8 @@ export interface Case {
   applicantAddressCountry: any;
   applicantAddressPostcode: any;
   applicantStatementOfTruth: string;
+  helpWithFeesReferenceNumber?: string;
+  applicantCaseName?: string;
+  hwfPaymentSelection?: YesOrNo;
+  applicationFee?: string;
 }

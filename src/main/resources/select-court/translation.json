@@ -1,0 +1,32 @@
+{
+    "translations": {
+        "en": {
+            "continue": "Continue",
+            "serviceName": "Capture court details for application",
+            "title": "Capture court details for application",
+            "line1":"If you decide to submit the application to high court, please use the paper form",
+            "label": "Please select court from the list",
+            "selectCourtDropdownDefaultLabel": "-- Select a value --"
+        },
+        "cy": {
+            "continue": "Continue (in welsh)",
+            "serviceName": "Capture court details for application (in welsh)",
+            "title": "Capture court details for application (in welsh)",
+            "line1":"If you decide to submit the application to high court, please use the paper form (in welsh)",
+            "label": "Please select court from the list (in welsh)",
+            "selectCourtDropdownDefaultLabel": "-- Dewiswch y gwerth --"
+        }
+    },
+    "errors":{
+        "en": {
+            "selectedCourt": {
+                "notSelected": "Please select court"
+            }
+        },
+        "cy": {
+            "selectedCourt": {
+                "notSelected": "Please select court (in welsh)"
+            }
+        } 
+    }
+}

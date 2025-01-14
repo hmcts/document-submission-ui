@@ -15,9 +15,9 @@ export const form: FormContent = {
         values: [
           { label: l => l.fgm, value: TYPE_OF_APPLICATION.FGM },
           { label: l => l.fmpo, value: TYPE_OF_APPLICATION.FMPO },
-          { label: l => l.sg, value: TYPE_OF_APPLICATION.SPECIAL_GUARDIANSHIP },
-          { label: l => l.dop, value: TYPE_OF_APPLICATION.DECLARATION_OF_PARENTEGE },
-          { label: l => l.po, value: TYPE_OF_APPLICATION.PARENTAL_ORDERS },
+          { label: l => l.sg, value: TYPE_OF_APPLICATION.SPECIAL_GUARDIANSHIP_ORDER },
+          { label: l => l.dop, value: TYPE_OF_APPLICATION.DECLARATION_OF_PARENTAGE },
+          { label: l => l.po, value: TYPE_OF_APPLICATION.PARENTAL_ORDER },
         ],
         validator: isFieldFilledIn,
       },
@@ -58,6 +58,6 @@ export const generateContent: TranslationFn = content => {
   const translationContent = languages[content.language]();
   return {
     ...translationContent,
-    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}) },
+    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}, content.additionalData?.req) },
   };
 };

@@ -61,6 +61,12 @@ export class GetController {
       uploadedDocuments: req.session['caseDocuments'],
       AddDocuments: req.session['AddtionalCaseDocuments'],
       addresses,
+      additionalData: {
+        req,
+        user: {
+          fullname: `${req.session.user?.givenName} ${req.session.user?.familyName}`,
+        },
+      },
     });
 
     /**

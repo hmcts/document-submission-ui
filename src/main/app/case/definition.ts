@@ -112,6 +112,12 @@ export interface StatusHistoriesItem {
   error_message: string;
 }
 
+export interface CourtListOptions {
+  epmsId: string;
+  site_name: string;
+  court_name: string;
+}
+
 export type DateAsString = string;
 
 export const enum FieldType {
@@ -271,10 +277,28 @@ export const enum CASE_TYPE_OF_APPLICATION {
   FL401 = 'FL401',
 }
 
-export const enum TYPE_OF_APPLICATION {
+export enum TYPE_OF_APPLICATION {
   FGM = 'FGM',
   FMPO = 'FMPO',
-  SPECIAL_GUARDIANSHIP = 'SG',
-  DECLARATION_OF_PARENTEGE = 'DOP',
-  PARENTAL_ORDERS = 'PO',
+  SPECIAL_GUARDIANSHIP_ORDER = 'SG',
+  DECLARATION_OF_PARENTAGE = 'DOP',
+  PARENTAL_ORDER = 'PO',
+}
+
+export interface PaymentError {
+  hasError: boolean;
+  errorContext: PaymentErrorContext | null;
+}
+
+export enum PaymentErrorContext {
+  DEFAULT_PAYMENT_ERROR = 'defaultPaymentError',
+  PAYMENT_UNSUCCESSFUL = 'paymentUnsuccessful',
+  APPLICATION_NOT_SUBMITTED = 'applicationNotSubmitted',
+}
+
+export const enum CASE_EVENT {
+  CASE_UPDATE = 'citizen-case-update',
+  CASE_SUBMIT = 'citizen-case-submit',
+  DELETE_CASE = 'deleteApplication',
+  CASE_SUBMIT_WITH_HWF = 'citizenCaseSubmitWithHWF',
 }

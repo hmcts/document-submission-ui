@@ -190,3 +190,9 @@ export const isTextAreaValid: Validator = value => {
     return ValidationError.INVALID;
   }
 };
+
+export const isValidOption: Validator = value => {
+  if ((value as string)?.trim() === '') {
+    return ValidationError.NOT_SELECTED;
+  }
+};

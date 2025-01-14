@@ -1,0 +1,51 @@
+{
+    "translations": {
+        "en": {
+            "serviceName": "Summary of fees",
+            "title": "Pay your application fee",
+            "paragraph1": "The divorce application fee is £",
+            "paragraph2": ". Your application will not be submitted until you have paid.",
+            "line2": "You will need a valid debit or credit card. If you cannot pay now, save the application and return to it when you are ready.",
+            "paragraph3": "This application cost £",
+            "paragraph4": ". You may be able to get help paying the fee if you:",
+            "payAndSubmitButton": "Pay and submit application",
+            "saveAndSignOutLink": "Save and sign out",
+            "reason1": "are on certain benefits or",
+            "reason2": "have a little saving or no saving or",
+            "reason3": "have low income",
+            "continue": "Save and submit application"
+        },
+        "cy": {
+            "serviceName": "Summary of fees (in welsh)",
+            "title": "Pay your application fee (in welsh)",
+            "paragraph1": "The divorce application fee is £, (in welsh)",
+            "paragraph2": ".Your application will not be submitted until you have paid. (in Welsh)",
+            "line2": "You will need a valid debit or credit card. If you cannot pay now, save the application and return to it when you are ready. (in welsh)",
+            "paragraph3": "This application cost £ (in welsh)",
+            "paragraph4": ". You may be able to get help paying the fee if you: (in welsh)",
+            "payAndSubmitButton": "Pay and submit application (welsh)",
+            "reason1": "are on certain benefits or (welsh)",
+            "reason2": "have a little saving or no saving or (welsh)",
+            "reason3": "have low income (welsh)",
+            "continue": "Save and submit application (welsh)"
+        }
+    },
+    "errors":{
+        "en": {
+            "applicantFirstName": {
+                "required": "Enter your first names"
+            },
+            "applicantLastName": {
+                "required": "Enter your last names"
+            }
+        },
+        "cy": {
+            "applicantFirstName": {
+                "required": "Enter your first names (in welsh)"
+            },
+            "applicantLastName": {
+                "required": "Enter your last names (in welsh)"
+            }
+        }
+    }
+}

@@ -192,6 +192,7 @@ export const generatePageContent = ({
   AddDocuments,
   userEmail,
   addresses = [],
+  additionalData,
   fee,
 }: {
   language: Language;
@@ -201,6 +202,7 @@ export const generatePageContent = ({
   AddDocuments?: any;
   userEmail?: string;
   addresses?: [];
+  additionalData?: CommonContentAdditionalData;
   fee?: Fee;
 }): PageContent => {
   const commonTranslations: typeof en = language === 'en' ? en : cy;
@@ -217,6 +219,7 @@ export const generatePageContent = ({
     userEmail,
     contactEmail,
     addresses,
+    additionalData,
     // eligibility,
     fee,
   };
@@ -245,7 +248,13 @@ export type CommonContent = typeof en & {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   addresses?: any[];
   eligibility?: Eligibility;
+  additionalData?: CommonContentAdditionalData;
   fee?: Fee;
+};
+
+export type CommonContentAdditionalData = {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  [key: string]: any;
 };
 
 export type Language = 'en' | 'cy';

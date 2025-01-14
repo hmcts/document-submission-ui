@@ -24,7 +24,8 @@ export const SELECT_ADDRESS: PageLink = '/address/select';
 export const EMAIL_ADDRESS: PageLink = '/email-address';
 export const MANUAL_ADDRESS: PageLink = '/address/manual';
 export const CONTACT_DETAILS: PageLink = '/contact-details';
-export const PAY_YOUR_FEE: PageLink = '/payment/pay-your-fee';
+export const PAY_YOUR_FEE: PageLink = '/pay-your-fee';
+export const HELP_WITH_FEE: PageLink = '/help-with-fee'
 export const UPLOAD_YOUR_DOCUMENTS: PageLink = '/upload-your-documents';
 export const CONTACT_PREFERENCES: PageLink = '/contact-preferences';
 export const CHECK_YOUR_ANSWERS: PageLink = '/check-your-answers';
@@ -45,3 +46,9 @@ export const JURISDICTION_CONNECTION_SUMMARY: PageLink = '/connection-summary';
 export const PAY_AND_SUBMIT: PageLink = '/pay-and-submit';
 export const ELIGIBILITY_URL: PageLink = '/eligibility';
 export const TYPE_OF_APPLICATION_URL: PageLink = '/type-of-application';
+export const SELECT_COURT: PageLink = '/select-court';
+
+/** @Edge case  Payment Handler*/
+export const PAYMENT_GATEWAY_ENTRY_URL: PageLink = '/payments/gateway';
+export const PAYMENT_RETURN_URL: PageLink = '/payment/reciever/callback';
+export const PAYMENT_RETURN_URL_CALLBACK: PageLink = `${PAYMENT_RETURN_URL}/:paymentId/:status`;

@@ -1,16 +1,13 @@
 import { TranslationFn } from '../../../app/controller/GetController';
 import { FormContent, FormFieldsFn } from '../../../app/form/Form';
 import { ResourceReader } from '../../../modules/resourcereader/ResourceReader';
+import { generateContent as fullNameGenerateContent } from '../../common/components/full-name';
+
+const HELP_WITH_FEE_FILE = 'help-with-fee';
 
 export const form: FormContent = {
   fields: () => {
     return {
-      documentUploadProceed: {
-        type: 'hidden',
-        label: l => l.uploadFiles,
-        labelHidden: true,
-        value: 'true',
-      },
     };
   },
   submit: {
@@ -20,17 +17,17 @@ export const form: FormContent = {
 
 export const generateContent: TranslationFn = content => {
   const resourceLoader = new ResourceReader();
-  resourceLoader.Loader('upload-addtional-documents');
-  const Translations = resourceLoader.getFileContents().translations;
+  resourceLoader.Loader(HELP_WITH_FEE_FILE);
+  const translations = resourceLoader.getFileContents().translations;
 
   const en = () => {
     return {
-      ...Translations.en,
+      ...translations.en,
     };
   };
   const cy = () => {
     return {
-      ...Translations.cy,
+      ...translations.cy,
     };
   };
 
@@ -38,9 +35,11 @@ export const generateContent: TranslationFn = content => {
     en,
     cy,
   };
-  const translations = languages[content.language]();
+  const translationContent = languages[content.language]();
+  const fullNameContent = fullNameGenerateContent(content);
   return {
-    ...translations,
-    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}, content.additionalData?.req) },
+    ...fullNameContent,
+    ...translationContent,
+    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}) },
   };
 };

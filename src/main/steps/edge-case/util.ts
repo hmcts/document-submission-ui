@@ -16,3 +16,7 @@ export const getUploadDocumentInstance = (req: AppRequest<AnyObject>): AxiosInst
     maxBodyLength: Infinity,
   });
 };
+
+export const  getEnumKeyByValue = (enumObj:any, value: string | undefined ) : string | undefined => {
+  return Object.keys(enumObj).find(key => enumObj[key] === value);
+}

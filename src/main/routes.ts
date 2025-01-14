@@ -5,7 +5,7 @@ import { Application, RequestHandler } from 'express';
 import { GetController } from './app/controller/GetController';
 import { PostController } from './app/controller/PostController';
 import { KeepAliveController } from './app/keepalive/KeepAliveController';
-import { stepsWithContent } from './steps';
+import { stepsWithContent, StepWithContent } from './steps';
 import { AccessibilityStatementGetController } from './steps/accessibility-statement/get';
 import { ContactUsGetController } from './steps/contact-us/get';
 import { ErrorController } from './steps/error/error.controller';
@@ -20,11 +20,16 @@ import {
   CSRF_TOKEN_ERROR_URL,
   HOME_URL,
   KEEP_ALIVE_URL,
+  PAYMENT_GATEWAY_ENTRY_URL,
+  PAYMENT_RETURN_URL_CALLBACK,
   PRIVACY_POLICY,
   SAVE_AND_SIGN_OUT,
+  //SELECT_COURT,
   TERMS_AND_CONDITIONS,
   TIMED_OUT_URL,
+  
 } from './steps/urls';
+import { PaymentHandler, PaymentValidationHandler } from './steps/edge-case/payments/paymentController';
 
 export class Routes {
   /**
@@ -37,6 +42,7 @@ export class Routes {
 
     app.get(CSRF_TOKEN_ERROR_URL, errorHandler(errorController.CSRFTokenError));
     app.get(HOME_URL, errorHandler(new HomeGetController().get));
+    //app.get(SELECT_COURT, errorHandler(new EdgeCaseCourtListController().get));
     app.get(SAVE_AND_SIGN_OUT, errorHandler(new SaveSignOutGetController().get));
     app.get(TIMED_OUT_URL, errorHandler(new TimedOutGetController().get));
     app.get(PRIVACY_POLICY, errorHandler(new PrivacyPolicyGetController().get));
@@ -52,23 +58,47 @@ export class Routes {
         ? require(`${step.stepDir}/${getControllerFileName}`).default
         : GetController;
 
-      app.get(step.url, errorHandler(new getController(step.view, step.generateContent).get));
+        if (step && getController) {
+          app.get(
+            step.url,
+            this.routeGuard.bind(this, step, 'get'),
+            errorHandler(new getController(step.view, step.generateContent).get)
+          );
+        }
 
       if (step.form) {
         const postControllerFileName = files.find(item => /post/i.test(item) && !/test/i.test(item));
         const postController = postControllerFileName
           ? require(`${step.stepDir}/${postControllerFileName}`).default
           : PostController;
-        app.post(step.url, errorHandler(new postController(step.form.fields).post));
+          app.post(
+            step.url,
+            // eslint-disable-next-line prettier/prettier
+            this.routeGuard.bind(this, step, 'post'),
+            errorHandler(new postController(step.form.fields).post)
+          );
       }
     }
 
     app.get(KEEP_ALIVE_URL, errorHandler(new KeepAliveController().get));
 
     /**
+     * @Payment_Handler
+     */
+        app.get(PAYMENT_GATEWAY_ENTRY_URL, errorHandler(PaymentHandler));
+        app.get(PAYMENT_RETURN_URL_CALLBACK, errorHandler(PaymentValidationHandler));
+    /**
      * @POST_ROUTES
      */
 
     app.use(errorController.notFound as unknown as RequestHandler);
+  }
+
+  private routeGuard(step: StepWithContent, httpMethod: string, req, res, next) {
+    if (typeof step?.routeGuard?.[httpMethod] === 'function') {
+      step.routeGuard[httpMethod].call(this, req, res, next);
+    } else {
+      next();
+    }
   }
 }

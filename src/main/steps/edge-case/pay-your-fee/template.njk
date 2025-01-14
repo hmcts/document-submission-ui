@@ -1,0 +1,15 @@
+{% extends "common/template.njk" %}
+{% block page_content %}
+<h1 class="govuk-heading-xl govuk-!-margin-bottom-7">{{title}}</h1>
+<p class="govuk-body">{{ paragraph1 }} {{ userCase.applicationFee }} {{paragraph2}}</p>
+<p class="govuk-body">{{ line2 }}</p>
+<a href= "/payments/gateway" class="govuk-button">{{payAndSubmitButton}}</a>
+<br/>
+<a href= "" class="govuk-link"> {{saveAndSignOutLink}}</a>
+<p class="govuk-body">{{ paragraph3 }} {{ userCase.applicationFee }} {{paragraph4}}</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>{{reason1}}</li>
+    <li>{{reason2}}</li>
+    <li>{{reason3}}</li>
+</ul>
+{% endblock %}

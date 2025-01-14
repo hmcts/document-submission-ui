@@ -8,6 +8,7 @@ import { Form, FormContent } from '../app/form/Form';
 import { Step } from './constants';
 import { edgecaseSequence } from './edge-case/edgecaseSequence';
 import { EDGE_CASE_URL, TYPE_OF_APPLICATION_URL } from './urls';
+import { NextFunction } from 'express';
 
 const stepForms: Record<string, Form> = {};
 
@@ -97,11 +98,17 @@ const getStepFiles = (stepDir: string) => {
   return { content, view };
 };
 
+type RouteGuard = {
+  get?: (req: AppRequest, res: Response, next: NextFunction) => Promise<void>;
+  post?: (req: AppRequest, res: Response, next: NextFunction) => Promise<void>;
+};
+
 export type StepWithContent = Step & {
   stepDir: string;
   generateContent: TranslationFn;
   form: FormContent;
   view: string;
+  routeGuard?: RouteGuard;
 };
 
 const getStepsWithContent = (sequence: Step[], subDir = ''): StepWithContent[] => {

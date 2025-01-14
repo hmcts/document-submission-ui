@@ -1,17 +1,17 @@
 import { TranslationFn } from '../../../app/controller/GetController';
 import { FormContent, FormFields, FormFieldsFn } from '../../../app/form/Form';
 import { ResourceReader } from '../../../modules/resourcereader/ResourceReader';
-import { form as fullNameForm, generateContent as fullNameGenerateContent } from '../../common/components/full-name';
+import { form as paymentSubmissionForm, generateContent as paymentGenerateContent } from '../../common/components/payment-submit';
+export * from './routeGuard';
 
-const fullNameFormFields = fullNameForm.fields as FormFields;
+const fullNameFormFields = paymentSubmissionForm.fields as FormFields;
 
-const FULL_NAME = 'full-name';
+const PAY_YOUR_FEE_FILE = 'pay-your-fee';
 
 export const form: FormContent = {
   fields: () => {
     return {
-      applicantFirstName: fullNameFormFields.firstNames,
-      applicantLastName: fullNameFormFields.lastNames,
+      hwfPaymentSelection: fullNameFormFields.hwfFields
     };
   },
   submit: {
@@ -21,7 +21,7 @@ export const form: FormContent = {
 
 export const generateContent: TranslationFn = content => {
   const resourceLoader = new ResourceReader();
-  resourceLoader.Loader(FULL_NAME);
+  resourceLoader.Loader(PAY_YOUR_FEE_FILE);
   const translations = resourceLoader.getFileContents().translations;
   const errors = resourceLoader.getFileContents().errors;
 
@@ -47,10 +47,10 @@ export const generateContent: TranslationFn = content => {
     cy,
   };
   const translationContent = languages[content.language]();
-  const fullNameContent = fullNameGenerateContent(content);
+  const paymentContent = paymentGenerateContent(content);
   return {
-    ...fullNameContent,
+    ...paymentContent,
     ...translationContent,
-    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}, content.additionalData?.req) },
+    form: { ...form, fields: (form.fields as FormFieldsFn)(content.userCase || {}) },
   };
 };
