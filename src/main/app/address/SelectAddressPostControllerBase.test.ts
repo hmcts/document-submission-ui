@@ -16,6 +16,7 @@ jest.mock('../../steps', () => {
 import { mockRequest } from '../../../test/unit/utils/mockRequest';
 import { mockResponse } from '../../../test/unit/utils/mockResponse';
 import { FieldPrefix } from '../case/case';
+import { FormContent, FormFieldsFn } from '../form/Form';
 
 import SelectAddressPostController from './SelectAddressPostControllerBase';
 
@@ -23,6 +24,7 @@ describe('SelectAddressPostController', () => {
   let req;
   let res;
   let controller;
+  let controller1;
 
   beforeEach(() => {
     req = mockRequest({
@@ -43,6 +45,22 @@ describe('SelectAddressPostController', () => {
     });
     res = mockResponse();
     controller = new SelectAddressPostController({}, FieldPrefix.APPLICANT);
+    const mockFieldFnForm: FormContent = {
+      fields: () => ({
+        customQuestion: {
+          label: 'custom',
+          type: 'text',
+        },
+      }),
+      submit: {
+        text: l => l.continue,
+      },
+      saveAsDraft: {
+        text: l => l.saveAsDraft,
+      },
+    };
+
+    controller1 = new SelectAddressPostController(mockFieldFnForm.fields as FormFieldsFn, FieldPrefix.APPLICANT);
   });
 
   describe('when there are no form errors', () => {
@@ -110,6 +128,13 @@ describe('SelectAddressPostController', () => {
       req = mockRequest({ session: { save: jest.fn(done => done()) } });
       mockGetNextStepUrl.mockReturnValue('/MOCK_ENDPOINT');
       await controller.post(req, res);
+      expect(mockGetNextStepUrl).toHaveBeenCalledWith(req, req.session.userCase);
+      expect(res.redirect).toHaveBeenCalledWith('/MOCK_ENDPOINT');
+    });
+    test('should redirect to correct screen with field function', async () => {
+      req = mockRequest({ session: { save: jest.fn(done => done()) } });
+      mockGetNextStepUrl.mockReturnValue('/MOCK_ENDPOINT');
+      await controller1.post(req, res);
       expect(mockGetNextStepUrl).toHaveBeenCalledWith(req, req.session.userCase);
       expect(res.redirect).toHaveBeenCalledWith('/MOCK_ENDPOINT');
     });

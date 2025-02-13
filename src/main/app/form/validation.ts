@@ -153,7 +153,7 @@ export const isPhoneNoValid: Validator = value => {
 
 export const isEmailValid: Validator = value => {
   if (isEmpty(value)) {
-    return '';
+    return 'invalid';
   }
 
   if (!isValidEmail(value as string)) {
@@ -188,5 +188,11 @@ export const isAddressSelected: Validator = value => {
 export const isTextAreaValid: Validator = value => {
   if (value && (value as string).trim?.().length > 500) {
     return ValidationError.INVALID;
+  }
+};
+
+export const isValidOption: Validator = value => {
+  if ((value as string)?.trim() === '') {
+    return ValidationError.NOT_SELECTED;
   }
 };

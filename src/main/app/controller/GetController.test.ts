@@ -2,7 +2,6 @@
 import { mockRequest } from '../../../test/unit/utils/mockRequest';
 import { mockResponse } from '../../../test/unit/utils/mockResponse';
 //import { generatePageContent } from '../../steps/common/common.content';
-import { Case } from '../case/case';
 // import { State } from '../case/definition';
 
 import { GetController } from './GetController';
@@ -69,28 +68,16 @@ describe('GetController', () => {
       await controller.get(req, res);
 
       const documentManagerRequest = req;
-      documentManagerRequest.session.caseDocuments = [
+      documentManagerRequest.session.userCase.applicantApplicationFormDocuments = [
         {
-          originalDocumentName: 'document1.docx',
-          _links: {
-            self: {
-              href: 'http://dm-example/documents/sae33',
-            },
-            binary: {
-              href: 'http://dm-example/documents/sae33/binary',
-            },
-          },
+          document_url: 'test2/1234',
+          document_binary_url: 'binary/test2/1234',
+          document_filename: 'test_document_1',
         },
         {
-          originalDocumentName: 'document2.docx',
-          _links: {
-            self: {
-              href: 'http://dm-example/documents/ce6e2',
-            },
-            binary: {
-              href: 'http://dm-example/documents/ce6e2/binary',
-            },
-          },
+          document_url: 'test2/12345',
+          document_binary_url: 'binary/test2/12346',
+          document_filename: 'test_document_2',
         },
       ];
 
@@ -254,43 +241,6 @@ describe('GetController', () => {
     });
   });
 
-  describe('save', () => {
-    test('Should save the users data, and return the updated userCase', async () => {
-      const body = { applyingWith: 'alone' };
-      const controller = new GetController('page', () => ({}));
-
-      const expectedUserCase = {
-        id: '1234',
-        applyingWith: 'alone',
-      };
-
-      const req = mockRequest({ body });
-      (req.locals.api.triggerEvent as jest.Mock).mockResolvedValueOnce(expectedUserCase);
-
-      const updatedUserCase = await controller.save(req, body as Partial<Case>, 'MOCK_EVENT');
-
-      expect(updatedUserCase).toEqual(expectedUserCase);
-      //expect(req.locals.api.triggerEvent).toHaveBeenCalledWith('1234', { ...body }, 'MOCK_EVENT');
-      expect(1).toEqual(1);
-    });
-
-    test('Should log error when there is an error in updating userCase', async () => {
-      const body = { applyingWith: 'alone' };
-      //const controller = new GetController('page', () => ({}));
-
-      //const expectedUserCase = { id: '1234' };
-
-      const req = mockRequest({ body });
-      (req.locals.api.triggerEvent as jest.Mock).mockRejectedValueOnce('Error saving');
-
-      /*const updatedUserCase = await controller.save(req, body as Partial<Case>, 'MOCK_EVENT');
-
-      expect(updatedUserCase).toEqual(expectedUserCase);
-      expect(req.locals.api.triggerEvent).toHaveBeenCalledWith('1234', { ...body }, 'MOCK_EVENT');*/
-      expect(1).toEqual(1);
-    });
-  });
-
   describe('saveSessionAndRedirect', () => {
     test('should save session and redirect to req.url', () => {
       const controller = new GetController('page', () => ({}));
@@ -317,69 +267,5 @@ describe('GetController', () => {
       }
       expect(res.redirect).not.toHaveBeenCalledWith('/request');
     });
-  });
-});
-
-describe('checking for documents Delete manager', () => {
-  it('should delete additional documents', async () => {
-    const languages = {
-      en: {
-        text: 'english',
-      },
-      cy: {
-        text: 'welsh',
-      },
-    };
-    //const userEmail = 'test@example.com';
-    const generateContent = content => languages[content.language];
-
-    /**
-     *     const mockFormContent = {
-      fields: {},
-    } as unknown ;
-     * 
-     */
-
-    /**
-     * const body = { applicant1PhoneNumber: 'invalid phone number' };
-    const query = `/upload-your-documents?query=delete&documentId=10&documentType=applicationform`
-
-    */
-
-    const controller = new GetController('page', generateContent);
-
-    const req = mockRequest();
-    const res = mockResponse();
-    req.session.caseDocuments = [
-      {
-        originalDocumentName: 'document1.docx',
-        _links: {
-          self: {
-            href: 'http://dm-example/documents/sae33',
-          },
-          binary: {
-            href: 'http://dm-example/documents/sae33/binary',
-          },
-        },
-      },
-      {
-        originalDocumentName: 'document2.docx',
-        _links: {
-          self: {
-            href: 'http://dm-example/documents/ce6e2',
-          },
-          binary: {
-            href: 'http://dm-example/documents/ce6e2/binary',
-          },
-        },
-      },
-    ];
-
-    req.query = {
-      query: 'delete',
-      documentId: '10',
-      documentType: 'applicationform',
-    };
-    await controller.get(req, res);
   });
 });

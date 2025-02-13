@@ -1,30 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import autobind from 'autobind-decorator';
-import axios, { AxiosInstance } from 'axios';
 import config from 'config';
 import { Response } from 'express';
 import Negotiator from 'negotiator';
 
 import { LanguageToggle } from '../../modules/i18n';
 import { CommonContent, Language, generatePageContent } from '../../steps/common/common.content';
-import { COS_API_BASE_URL } from '../../steps/common/constants/apiConstants';
 import { TOGGLE_SWITCH } from '../../steps/common/constants/commonConstants';
 import * as Urls from '../../steps/urls';
-import { ADDITIONAL_DOCUMENTS_UPLOAD, COOKIES, UPLOAD_YOUR_DOCUMENTS } from '../../steps/urls';
-import { Case, CaseWithId } from '../case/case';
+import { COOKIES } from '../../steps/urls';
 
 import { AppRequest } from './AppRequest';
 export type PageContent = Record<string, unknown>;
 export type TranslationFn = (content: CommonContent) => PageContent;
 
-export type AsyncTranslationFn = any;
 @autobind
 export class GetController {
   constructor(protected readonly view: string, protected readonly content: TranslationFn) {}
 
   public async get(req: AppRequest, res: Response): Promise<void> {
-    console.log('usercase session --->', req.session.userCase);
-
     this.CookiePrefrencesChanger(req, res);
 
     if (res.locals.isError || res.headersSent) {
@@ -37,11 +30,7 @@ export class GetController {
     const addresses = req.session?.addresses;
 
     const sessionErrors = req.session?.errors || [];
-    const FileErrors = req.session.fileErrors || [];
-    if (req.session?.errors || req.session.fileErrors) {
-      req.session.errors = undefined;
-      req.session.fileErrors = [];
-    }
+
     /**
      *
      *                      This util allows to delete document
@@ -58,21 +47,21 @@ export class GetController {
       pageContent: this.content,
       userCase: req.session.userCase,
       userEmail: req.session?.user?.email,
-      uploadedDocuments: req.session['caseDocuments'],
-      AddDocuments: req.session['AddtionalCaseDocuments'],
+      uploadedDocuments: req.session.userCase.applicantApplicationFormDocuments,
+      addDocuments: req.session.userCase.applicantAdditionalDocuments,
       addresses,
+      additionalData: {
+        req,
+        user: {
+          fullname: `${req.session.user?.givenName} ${req.session.user?.familyName}`,
+        },
+      },
     });
 
-    /**
-     *
-     *                      This util allows to delete document
-     *                      the params it uses is @req and @res
-     *                      This is uses @documentDeleteManager Instance of the this GetController class
-     *      ************************************ ************************************
-     *      ************************************  ************************************
-     *
-     */
-    this.documentDeleteManager(req, res);
+    if (req.session?.errors) {
+      req.session.errors = [];
+    }
+
     const RedirectConditions = {
       /*************************************** query @query  ***************************/
       query: req.query.hasOwnProperty('query'),
@@ -113,15 +102,16 @@ export class GetController {
      */
     let pageRenderableContents = {
       ...content,
-      uploadedDocuments: req.session['caseDocuments'],
-      addtionalDocuments: req.session['AddtionalCaseDocuments'],
+      uploadedDocuments: req.session.userCase.applicantApplicationFormDocuments,
+      addtionalDocuments: req.session.userCase.applicantAdditionalDocuments,
       cookiePrefrences: cookiesForPrefrences,
       sessionErrors,
+      paymentError: req.session.paymentError,
       cookieMessage: false,
-      FileErrors,
       htmlLang: language,
-      isDraft: req.session?.userCase?.state ? req.session.userCase.state === '' : true,
     };
+
+    req.session.paymentError = { hasError: false, errorContext: null };
 
     /**
      *
@@ -158,7 +148,7 @@ export class GetController {
 
     // Browsers default language
     const negotiator = new Negotiator(req);
-    return negotiator.language(LanguageToggle.supportedLanguages) || 'en';
+    return negotiator.language(LanguageToggle.supportedLanguages) ?? 'en';
   }
 
   public parseAndSetReturnUrl(req: AppRequest): void {
@@ -166,17 +156,6 @@ export class GetController {
       if (Object.values(Urls).find(item => item === `${req.query.returnUrl}`)) {
         req.session.returnUrl = `${req.query.returnUrl}`;
       }
-    }
-  }
-
-  public async save(req: AppRequest, formData: Partial<Case>, eventName: string): Promise<CaseWithId> {
-    try {
-      return await req.locals.api.triggerEvent(req.session.userCase.id, formData, eventName);
-    } catch (err) {
-      req.locals.logger.error('Error saving', err);
-      req.session.errors = req.session.errors || [];
-      req.session.errors.push({ errorType: 'errorSaving', propertyName: '*' });
-      return req.session.userCase;
     }
   }
 
@@ -246,68 +225,6 @@ export class GetController {
       res.redirect(RedirectURL);
     }
   };
-
-  public async documentDeleteManager(req: AppRequest, res: Response): Promise<void> {
-    if (
-      req.query.hasOwnProperty('query') &&
-      req.query.hasOwnProperty('docId') &&
-      req.query.hasOwnProperty('documentType')
-    ) {
-      const checkForDeleteQuery = req.query['query'] === 'delete';
-      if (checkForDeleteQuery) {
-        const { documentType } = req.query;
-        const { docId } = req.query;
-        const Headers = {
-          Authorization: `Bearer ${req.session.user['accessToken']}`,
-        };
-        const DOCUMENT_DELETEMANAGER: AxiosInstance = axios.create({
-          baseURL: config.get(COS_API_BASE_URL),
-          headers: { ...Headers },
-        });
-        /** Switching type of documents */
-        /*eslint no-case-declarations: "error"*/
-        switch (documentType) {
-          case 'applicationform': {
-            try {
-              const baseURL = `/doc/dss-orhestration/${docId}/delete`;
-              await DOCUMENT_DELETEMANAGER.delete(baseURL);
-              const sessionObjectOfApplicationDocuments = req.session['caseDocuments'].filter(document => {
-                const { documentId } = document;
-                return documentId !== docId;
-              });
-              req.session['caseDocuments'] = sessionObjectOfApplicationDocuments;
-              this.saveSessionAndRedirect(req, res, () => {
-                res.redirect(UPLOAD_YOUR_DOCUMENTS);
-              });
-            } catch (error) {
-              console.log(error);
-            }
-
-            break;
-          }
-
-          case 'additional': {
-            try {
-              const baseURL = `/doc/dss-orhestration/${docId}/delete`;
-              await DOCUMENT_DELETEMANAGER.delete(baseURL);
-              const sessionObjectOfAdditionalDocuments = req.session['AddtionalCaseDocuments'].filter(document => {
-                const { documentId } = document;
-                return documentId !== docId;
-              });
-              req.session['AddtionalCaseDocuments'] = sessionObjectOfAdditionalDocuments;
-              this.saveSessionAndRedirect(req, res, () => {
-                res.redirect(ADDITIONAL_DOCUMENTS_UPLOAD);
-              });
-            } catch (error) {
-              console.log(error);
-            }
-
-            break;
-          }
-        }
-      }
-    }
-  }
 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getEventName(req: AppRequest): string {

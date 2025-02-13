@@ -6,6 +6,10 @@
 {% block head %}
   {% include "./webpack/css.njk" %}
   <!-- {{ userCase.id }} -->
+    {% include "./views/includes/script-ga_tag_manager.njk" %}
+{% endblock %}
+{% block bodyStart %}
+  {% include "./views/includes/script-ga_tag_manager_2.njk" %}
 {% endblock %}
 
 {% block header %}

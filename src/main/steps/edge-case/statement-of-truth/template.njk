@@ -1,18 +1,25 @@
-{% extends "common/template.njk" %}
-
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-
+{% extends "common/template.njk" %}
 
 {% block page_content %}
 
-{{ govukWarningText({
+  {% if paymentError.hasError === true %}
+    {{ govukErrorSummary({
+        titleText: errors.paymentError.title,
+        errorList: [
+        {
+            text: errors.paymentError[paymentError.errorContext],
+            href:"#"
+        }
+        ]
+    }) }}
+  {% endif %}
 
-text: "Proceedings for contempt of court may be brought against anyone who makes, or causes to be made, a false statement verified by a statement of truth without an honest belief in the truth.",
+  {{ govukWarningText({
+    text: proceedingsForContempt,
+    iconFallbackText: "Warning"
+  }) }}
 
-iconFallbackText: "Warning"
-
-}) }}
-
-{%endblock%}
-
+  {%endblock%}

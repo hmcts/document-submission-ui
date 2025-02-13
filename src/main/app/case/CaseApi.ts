@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import https from 'https';
 
-import Axios, { AxiosError, AxiosInstance } from 'axios';
+import Axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import config from 'config';
+import FormData from 'form-data';
 import { LoggerInstance } from 'winston';
 
-import { EMPTY } from '../../steps/common/constants/commonConstants';
 import { getServiceAuthToken } from '../auth/service/get-service-auth-token';
-import { AppRequest, UserDetails } from '../controller/AppRequest';
+import { UserDetails } from '../controller/AppRequest';
 
-import { Case, CaseWithId } from './case';
-import { CaseAssignedUserRoles } from './case-roles';
 import {
-  CASE_TYPE_OF_APPLICATION,
-  CITIZEN_SUBMIT,
-  CaseData,
-  DSS_CASE_EVENT,
-  TYPE_OF_APPLICATION,
-  YesOrNo,
-} from './definition';
-import { toApiDate, toApiFormat } from './to-api-format';
+  CreateCaseResponse,
+  UpdateCaseRequest,
+  UpdateCaseResponse,
+  mapCreateCaseResponseData,
+  mapUpdateCaseResponseData,
+  prepareCaseRequestData,
+  prepareUpdateCaseRequestData,
+} from './api-utility';
+import { CaseWithId } from './case';
+import { CaseData, CourtListOptions, DocumentUploadResponse } from './definition';
 
 export class CaseApi {
   /**
@@ -31,21 +31,30 @@ export class CaseApi {
 
   /**
    *
+   * @param userCase
    * @returns
    */
-  public async getOrCreateCase(): Promise<any> {
-    return { id: '', state: 'FIS' };
-  }
+  public async createCase(userCase: CaseWithId): Promise<CreateCaseResponse> {
+    try {
+      if (!userCase?.edgeCaseTypeOfApplication) {
+        throw new Error('createCase - error in creating case. case type is missing.');
+      }
 
-  /**
-   *
-   * @param caseId
-   * @returns
-   */
-  public async getCaseById(): Promise<CaseWithId> {
-    return new Promise(() => {
-      null;
-    });
+      const request = prepareCaseRequestData(userCase);
+      const response = await this.axios.post<CreateCaseResponse, AxiosResponse<CaseData>>('/case/create', request, {
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+      });
+
+      if (response.status === 200) {
+        return mapCreateCaseResponseData(response.data);
+      }
+      throw new Error('createCase - error in creating case. case could not be created.');
+    } catch (err) {
+      this.logError(err);
+      throw new Error('createCase - error in creating case. case could not be created.');
+    }
   }
 
   /**
@@ -55,48 +64,15 @@ export class CaseApi {
    * @param  formData
    * @returns
    */
-  public async updateCase(req: AppRequest, eventName: string): Promise<any> {
+  public async updateCase(userCase: CaseWithId, eventName: string): Promise<UpdateCaseResponse> {
     try {
-      if (req.session.userCase.id === EMPTY) {
-        throw new Error('Error in updating case, case id is missing');
+      if (!userCase?.id) {
+        throw new Error('updateCase - error in updating case. case id is missing.');
       }
 
-      const AdditionalDocuments = req.session['AddtionalCaseDocuments'].map(document => {
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        const { document_url, document_filename, document_binary_url } = document;
-        return {
-          id: document_url.substring(document_url.lastIndexOf('/') + 1),
-          value: {
-            documentLink: {
-              document_url,
-              document_filename,
-              document_binary_url,
-            },
-          },
-        };
-      });
-      const CaseDocuments = req.session['caseDocuments'].map(document => {
-        const { document_url, document_filename, document_binary_url } = document;
-        return {
-          id: document_url.substring(document_url.lastIndexOf('/') + 1),
-          value: {
-            documentLink: {
-              document_url,
-              document_filename,
-              document_binary_url,
-            },
-          },
-        };
-      });
-      const event = eventName === CITIZEN_SUBMIT ? DSS_CASE_EVENT.DSS_CASE_SUBMIT : DSS_CASE_EVENT.UPDATE_CASE;
-      const data = {
-        ...mapCaseData(req),
-        applicantAdditionalDocuments: AdditionalDocuments,
-        applicantApplicationFormDocuments: CaseDocuments,
-      };
-      const response = await this.axios.post<CreateCaseResponse>(
-        `${req.session.userCase.id}/${event}/update-dss-case`,
-        data,
+      const response = await this.axios.post<UpdateCaseRequest, AxiosResponse<CaseData>>(
+        `${userCase.id}/${eventName}/update-dss-case`,
+        prepareUpdateCaseRequestData(userCase),
         {
           httpsAgent: new https.Agent({ rejectUnauthorized: false }),
           maxContentLength: Infinity,
@@ -105,91 +81,27 @@ export class CaseApi {
       );
 
       if (response.status === 200) {
-        req.session.userCase.id = response.data.id;
-        return req.session.userCase;
-      } else {
-        throw new Error('Error in creating case');
+        return mapUpdateCaseResponseData(response.data);
       }
+      throw new Error('updateCase - error in updating case. case could not be updated.');
     } catch (err) {
       this.logError(err);
-      throw new Error('Error in updating case');
+      throw new Error('updateCase - error in updating case. case could not be updated.');
     }
   }
 
   /**
    *
-   * @param req
-   * @param userDetails
-   * @param  formData
    * @returns
    */
-  public async createCaseNew(req: AppRequest): Promise<any> {
-    this.logger.info('services.cos.url');
-    this.logger.info(config.get('services.cos.url'));
-    const data = {
-      edgeCaseTypeOfApplication: req.session.userCase.typeOfApplication,
-      caseTypeOfApplication: [TYPE_OF_APPLICATION.FGM, TYPE_OF_APPLICATION.FMPO].includes(
-        req.session.userCase.typeOfApplication!
-      )
-        ? CASE_TYPE_OF_APPLICATION.FL401
-        : CASE_TYPE_OF_APPLICATION.C100,
-    };
-
+  public async getCourtList(): Promise<CourtListOptions[]> {
     try {
-      const response = await this.axios.post<CreateCaseResponse>('/case/create', data, {
-        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-      });
-      req.session.userCase.id = response.data.id;
-      req.session.userCase.caseTypeOfApplication = response.data.caseTypeOfApplication;
-      return req.session.userCase;
-    } catch (err) {
-      this.logError(err);
-      throw new Error('Case could not be created.');
-    }
-  }
-
-  /**
-   *
-   * @param caseId
-   * @param userId
-   * @returns
-   */
-  public async getCaseUserRoles(caseId: string, userId: string): Promise<CaseAssignedUserRoles> {
-    try {
-      const response = await this.axios.get<CaseAssignedUserRoles>(`case-users?case_ids=${caseId}&user_ids=${userId}`);
+      const response = await this.axios.get('/edge-case/court-list');
       return response.data;
     } catch (err) {
       this.logError(err);
-      throw new Error('Case roles could not be fetched.');
+      throw new Error('getCourtList - court list could not be fetched.');
     }
-  }
-
-  /**
-   *
-   * @param caseId
-   * @param data
-   * @param eventName
-   * @returns
-   */
-  private async sendEvent(caseId: string, data: Partial<CaseData>, eventName: string): Promise<CaseWithId> {
-    console.log({ caseId, data, eventName });
-    return new Promise(() => {
-      null;
-    });
-  }
-
-  /**
-   *
-   * @param caseId
-   * @param userData
-   * @param eventName
-   * @returns
-   */
-  public async triggerEvent(caseId: string, userData: Partial<Case>, eventName: string): Promise<CaseWithId> {
-    const data = toApiFormat(userData);
-    return this.sendEvent(caseId, data, eventName);
   }
 
   /**
@@ -206,6 +118,39 @@ export class CaseApi {
       this.logger.error(`API Error ${error.request.config.method} ${error.request.config.url}`);
     } else {
       this.logger.error('API Error', error.message);
+    }
+  }
+
+  public async uploadDocument(formdata: FormData): Promise<DocumentUploadResponse> {
+    try {
+      const response = await this.axios.post<DocumentUploadResponse>('/upload-citizen-document', formdata, {
+        headers: {
+          ...formdata.getHeaders(),
+        },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+      });
+
+      if (response.status === 200) {
+        return { document: response.data.document, status: response.data.status };
+      }
+      throw new Error('Document could not be uploaded.');
+    } catch (err) {
+      this.logError(err);
+      throw new Error('Document could not be uploaded.');
+    }
+  }
+
+  public async deleteDocument(docId: string): Promise<void> {
+    try {
+      const response = await this.axios.delete<void>(`/${docId}/delete`);
+      if (response.status === 200) {
+        return;
+      }
+      throw new Error('Document could not be deleted.');
+    } catch (err) {
+      this.logError(err);
+      throw new Error('Document could not be deleted.');
     }
   }
 }
@@ -243,43 +188,3 @@ export const enum State {
   CASE_WITHDRAWN = 'CASE_WITHDRAWN',
   CASE_DELETED = 'REQUESTED_FOR_DELETION',
 }
-
-interface CreateCaseResponse {
-  status: string;
-  id: string;
-  caseTypeOfApplication: string;
-  c100RebuildReturnUrl: string;
-  state: State;
-  noOfDaysRemainingToSubmitCase: string;
-}
-
-export const mapCaseData = (req: AppRequest): any => {
-  const data = {
-    // applicants: req.session.userCase.applicants[0],
-
-    namedApplicant: req.session.userCase.namedApplicant,
-    caseTypeOfApplication: req.session['edgecaseType'],
-    applicantFirstName: req.session.userCase.applicantFirstName,
-    applicantLastName: req.session.userCase.applicantLastName,
-    applicantDateOfBirth: toApiDate(req.session.userCase.applicantDateOfBirth),
-    applicantContactPreference: req.session.userCase['contactPreferenceType'],
-    applicantEmailAddress: req.session.userCase.applicantEmailAddress,
-    applicantPhoneNumber: req.session.userCase.applicantPhoneNumber,
-    applicantHomeNumber: req.session.userCase.applicantHomeNumber,
-    applicantAddress1: req.session.userCase.applicantAddress1,
-    applicantAddress2: req.session.userCase.applicantAddress2,
-    applicantAddressTown: req.session.userCase.applicantAddressTown,
-    applicantAddressCountry: 'United Kingdom',
-    applicantAddressPostCode: req.session.userCase.applicantAddressPostcode,
-    applicantStatementOfTruth: checkboxConverter(req.session.userCase.applicantStatementOfTruth),
-  };
-  return data;
-};
-
-const checkboxConverter = (value: string | undefined) => {
-  if (value === YesOrNo.YES) {
-    return YesOrNo.YES;
-  } else {
-    return YesOrNo.NO;
-  }
-};

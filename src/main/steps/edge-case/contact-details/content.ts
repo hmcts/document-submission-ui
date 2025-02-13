@@ -10,13 +10,9 @@ export const form: FormContent = {
       classes: 'govuk-input',
       label: l2 => l2.homePhoneLabel,
       validator: (value, formData) => {
-        const hasHomePhoneNumberEntered = (value as string[])?.length && (value as string) !== '[]';
-        const hasMobilePhoneNumberEntered = formData.applicantPhoneNumber && !!formData.applicantPhoneNumber?.length;
-
-        if (!hasHomePhoneNumberEntered && !hasMobilePhoneNumberEntered) {
-          return 'atleastOneRequired';
-        }
-        return isPhoneNoValid(value);
+        return !(value as string)?.length && !formData?.applicantPhoneNumber?.length
+          ? 'atleastOneRequired'
+          : isPhoneNoValid(value);
       },
     },
     applicantPhoneNumber: {
@@ -24,13 +20,9 @@ export const form: FormContent = {
       classes: 'govuk-input',
       label: ml => ml.mobilePhoneLabel,
       validator: (value, formData) => {
-        const hasMobilePhoneNumberEntered = (value as string[])?.length && (value as string) !== '[]';
-        const hasHomePhoneNumberEntered = formData.applicantHomeNumber && !!formData.applicantHomeNumber?.length;
-
-        if (!hasHomePhoneNumberEntered && !hasMobilePhoneNumberEntered) {
-          return 'atleastOneRequired';
-        }
-        return isPhoneNoValid(value);
+        return !(value as string)?.length && !formData?.applicantHomeNumber?.length
+          ? 'atleastOneRequired'
+          : isPhoneNoValid(value);
       },
     },
   },
@@ -42,33 +34,13 @@ export const form: FormContent = {
 export const generateContent: TranslationFn = content => {
   const resourceLoader = new ResourceReader();
   resourceLoader.Loader('contact-details');
-  const Translations = resourceLoader.getFileContents().translations;
-  const errors = resourceLoader.getFileContents().errors;
+  const translations = resourceLoader.getFileContents();
 
-  const en = () => {
-    return {
-      ...Translations.en,
-      errors: {
-        ...errors.en,
-      },
-    };
-  };
-  const cy = () => {
-    return {
-      ...Translations.cy,
-      errors: {
-        ...errors.cy,
-      },
-    };
-  };
-
-  const languages = {
-    en,
-    cy,
-  };
-  const translations = languages[content.language]();
   return {
-    ...translations,
+    ...translations?.translations?.[content.language],
+    errors: {
+      ...translations?.errors?.[content.language],
+    },
     form,
   };
 };

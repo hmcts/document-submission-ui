@@ -1,0 +1,66 @@
+{
+  "translations": {
+    "en": {
+      "serviceName": "Summary of fees",
+      "title": "Pay your application fee",
+      "paragraph1": "The divorce application fee is £",
+      "paragraph2": ". Your application will not be submitted until you have paid.",
+      "line2": "You will need a valid debit or credit card. If you cannot pay now, save the application and return to it when you are ready.",
+      "paragraph3": "This application cost £",
+      "paragraph4": ". You may be able to get help paying the fee if you:",
+      "payAndSubmitButton": "Pay and submit application",
+      "reason1": "are on certain benefits or",
+      "reason2": "have a little saving or no saving or",
+      "reason3": "have low income",
+      "continue": "Save and submit application",
+      "hwfTextOption": "I need help paying the fee",
+      "hwfReferenceNumberText": "I already have a help with fees reference number",
+      "hwfReferenceInputText": "help with fees reference number",
+      "errors": {
+        "paymentError": {
+          "title": "There is a problem",
+          "defaultPaymentError": "Your application is not submitted. Please try again",
+          "applicationNotSubmitted": "Your payment was successful but you need to resubmit your application. If you are unable to submit the application, please contact the court with the case reference number {caseId}",
+          "paymentUnsuccessful": "Your payment was unsuccessful. Make the payment again and resubmit your application"
+        },
+        "hwfPaymentSelection": {
+            "required": "Please select if you need help paying the fee"
+        },
+        "helpWithFeesReferenceNumber": {
+          "required": "Please enter your help with fees reference number"
+        }
+      }
+    },
+    "cy": {
+      "serviceName": "Summary of fees (in welsh)",
+      "title": "Pay your application fee (in welsh)",
+      "paragraph1": "The divorce application fee is £, (in welsh)",
+      "paragraph2": ".Your application will not be submitted until you have paid. (in Welsh)",
+      "line2": "You will need a valid debit or credit card. If you cannot pay now, save the application and return to it when you are ready. (in welsh)",
+      "paragraph3": "This application cost £ (in welsh)",
+      "paragraph4": ". You may be able to get help paying the fee if you: (in welsh)",
+      "payAndSubmitButton": "Pay and submit application (welsh)",
+      "reason1": "are on certain benefits or (welsh)",
+      "reason2": "have a little saving or no saving or (welsh)",
+      "reason3": "have low income (welsh)",
+      "continue": "Save and submit application (welsh)",
+      "hwfTextOption": "I need help paying the fee (welsh)",
+      "hwfReferenceNumberText": "I already have a help with fees reference number (welsh)",
+      "hwfReferenceInputText": "help with fees reference number (welsh)",
+      "errors": {
+        "paymentError": {
+          "title": "There is a problem (welsh)",
+          "defaultPaymentError": "Your application is not submitted. Please try again (welsh)",
+          "applicationNotSubmitted": "Your payment was successful but you need to resubmit your application. If you are unable to submit the application, please contact the court with the case reference number {caseId} (welsh)",
+          "paymentUnsuccessful": "Your payment was unsuccessful. Make the payment again and resubmit your application (welsh)"
+        },
+        "hwfPaymentSelection": {
+            "required": "Please select if you need help paying the fee (welsh)"
+        },
+        "helpWithFeesReferenceNumber": {
+          "required": "Please enter your help with fees reference number (welsh)"
+        }
+      }
+    }
+  }
+}

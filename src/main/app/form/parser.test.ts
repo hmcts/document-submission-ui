@@ -31,7 +31,7 @@ describe('Parser', () => {
         } as FormField,
       };
 
-      setupCheckboxParser(false)(Object.entries(mockFormWithCheckbox)[0]);
+      setupCheckboxParser()(Object.entries(mockFormWithCheckbox)[0]);
 
       const mockFormData = { checkboxField: ['', 'checked1', 'checked2'] };
       const actual = mockFormWithCheckbox.checkboxField.parser?.(mockFormData);
@@ -47,31 +47,12 @@ describe('Parser', () => {
         } as FormField,
       };
 
-      setupCheckboxParser(false)(Object.entries(mockFormWithCheckbox)[0]);
+      setupCheckboxParser()(Object.entries(mockFormWithCheckbox)[0]);
 
       const mockFormData = { checkboxField: ['', 'checked', 'checked'] };
       const actual = mockFormWithCheckbox.checkboxField.parser?.(mockFormData);
 
       expect(actual).toEqual([['checkboxField', 'checked']]);
-    });
-
-    test.each([
-      { isSaveAndSignOut: false, expectedEmpty: '' },
-      { isSaveAndSignOut: true, expectedEmpty: null },
-    ])('correctly handles unchecked checkboxes when saving & signing out', ({ isSaveAndSignOut, expectedEmpty }) => {
-      const mockFormWithCheckbox = {
-        checkboxField: {
-          type: 'checkboxes',
-          values: [{ value: 'checked' }],
-        } as FormField,
-      };
-
-      setupCheckboxParser(isSaveAndSignOut)(Object.entries(mockFormWithCheckbox)[0]);
-
-      const mockFormData = { checkboxField: [''] };
-      const actual = mockFormWithCheckbox.checkboxField.parser?.(mockFormData);
-
-      expect(actual).toEqual([['checkboxField', expectedEmpty]]);
     });
   });
 });

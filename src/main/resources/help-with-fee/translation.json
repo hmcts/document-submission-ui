@@ -1,0 +1,20 @@
+{
+    "translations": {
+        "en": {
+            "continue": "Save and sign out",
+            "serviceName": "Help with fees",
+            "title": "You need to apply for help with your fees",
+            "line1":"You need to <a href='https://www.gov.uk/get-help-with-court-fees' class='govuk-link' target='_blank' aria-label='apply for help with fees (opens in a new tab)'>apply for help with fees (opens in a new tab)</a> before you continue with this application.",
+            "line2":"Enter the court form number 'D8' when asked. This will be one of the first question when you <a href='https://www.gov.uk/get-help-with-court-fees' class='govuk-link' target='_blank' aria-label='apply for help with fees (opens in a new tab)'>apply for help with fees (opens in a new tab)</a>.",
+            "line3":"After you have applied then you wil receive a Help With Fees reference number. You should enter the reference number when you return to this application."
+        },
+        "cy": {
+            "continue": "Save and sign out (in welsh)",
+            "serviceName": "Help with fees (in welsh)",
+            "title": "You need to apply for help with your fees (in welsh)",
+            "line1":"You need to <a href='https://www.gov.uk/get-help-with-court-fees' class='govuk-link' target='_blank' aria-label='apply for help with fees (opens in a new tab)'>apply for help with fees (opens in a new tab)</a> before you continue with this application (in welsh).",
+            "line2":"Enter the court form number 'D8' when asked. This will be one of the first question when you <a href='https://www.gov.uk/get-help-with-court-fees' class='govuk-link' target='_blank' aria-label='apply for help with fees (opens in a new tab)'>apply for help with fees (opens in a new tab)</a> (in welsh).",
+            "line3":"After you have applied then you wil receive a Help With Fees reference number. You should enter the reference number when you return to this application (in welsh)."
+        }
+    }
+}

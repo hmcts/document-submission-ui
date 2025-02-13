@@ -1,0 +1,56 @@
+{
+  "translations": {
+    "en": {
+      "serviceName": "Document upload",
+      "title": "Additional Documents",
+      "youNeed": "Please upload any additional documents that should accompany this application(s) form(s).",
+      "youNeed2": "Examples of additional documents can be found on the application form",
+      "youNeed3": "Please upload each document separately by using the “upload” button",
+      "youNeed4": "You can post or email your documents to the court. Copies of certificates must be certified, which means they must be signed and dated by a professional person such as a solicitor or doctor.",
+      "uploadButton": "Upload",
+      "summaryText": "File uploads requirements",
+      "delete": "Delete",
+      "uploadRequirement": [
+        "File formats: MS Word, MS Excel, PDF, JPG, GIF, PNG, TXT, RTF",
+        "File size per document: up to 20 megabytes (MB)",
+        "Files cannot be password protected",
+        "You can’t upload executable(.exe) .zip or other archive files due to virus risks."
+      ],
+      "errors": {
+        "additionalApplicationUpload": {
+          "sizeError": "File size exceeds 20Mb. Please upload a file that is less than 20Mb",
+          "formatError": "This service only accepts files in the formats - Ms Word, Ms Excel, PDF, JPG, GIF, PNG, TXT, RTF",
+          "totalFilesExceededError": "You can upload 20 files only. Please delete one of the uploaded files and retry",
+          "noFileUploadError": "Please choose a file to upload",
+          "uploadError": "Document could not be uploaded"
+        }
+      }
+    },
+    "cy": {
+      "serviceName": "Document upload - (Whelsh)",
+      "title": "Additional Documents - (Whelsh)",
+      "youNeed": "Please upload any additional documents that should accompany this application(s) form(s). - (Whelsh)",
+      "youNeed2": "Examples of additional documents can be found on the application form - (Whelsh)",
+      "youNeed3": "Please upload each document separately by using the “upload” button - (Whelsh)",
+      "youNeed4": "You can post or email your documents to the court. Copies of certificates must be certified, which means they must be signed and dated by a professional person such as a solicitor or doctor.- (Whelsh)",
+      "uploadButton": "Upload (Whelsh)",
+      "summaryText": "File uploads requirements",
+      "delete": "Delete",
+      "uploadRequirement": [
+        "File formats: MS Word, MS Excel, PDF, JPG, GIF, PNG, TXT, RTF (welsh)",
+        "File size per document: up to 20 megabytes (MB) (welsh)",
+        "Files cannot be password protected (welsh)",
+        "You can’t upload executable(.exe) .zip or other archive files due to virus risks. (welsh)"
+      ],
+      "errors": {
+        "additionalApplicationUpload": {
+          "sizeError": "File size exceeds 20Mb. Please upload a file that is less than 20Mb - welsh",
+          "formatError": "This service only accepts files in the formats - Ms Word, Ms Excel, PDF, JPG, GIF, PNG, TXT, RTF - welsh",
+          "totalFilesExceededError": "You can upload 20 files only. Please delete one of the uploaded files and retry - welsh",
+          "noFileUploadError": "Please choose a file to upload (in welsh)",
+          "uploadError": "Nid oedd modd uwchlwytho'r ddogfen"
+        }
+      }
+    }
+  }
+}

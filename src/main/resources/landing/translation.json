@@ -2,17 +2,37 @@
     "translations": {
         "en": {
             "serviceTitle": "Getting Started",
-            "banner": "This is a new service – your <a  class='govuk-link' href='#'>feedback</a> will help us to improve it.",
-            "heading": "Submit an application to HM Courts and Tribunal service",
-            "body": "<p class='govuk-body-l'>Use this service to upload and submit a completed application.<br/></br><span class='govuk-!-font-weight-bold'>Before you start</span><br/> <p class='govuk-body-l'>You cannot save your progress so it is important you have everything you need before you start.</p><p class='govuk-body-l'>You might need to upload supporting documents with your completed application.</p><p class='govuk-body-l'>Some applications may ask for a fee, so make sure you have your payment details ready.</p><p class='govuk-body-l'>You will be asked a few simple questions. You can review the answers to these questions before you submit them with your application.</p>",
+            "bannerStart": "This is a new service – your",
+            "bannerLink": "feedback",
+            "bannerEnd": "will help us to improve it.",
+            "warning":"You cannot save the progress for the application. So it is important you have everything you need before you get started",
+            "heading": "Submit an application to HM Courts and Tribunal Services",
+            "body": "Use this service to upload and submit a completed application.",
+            "subHeading":"Before you start",
+            "subBody":[
+                "You cannot save your progress so it is important you have everything you need before you start.",
+                "You might need to upload supporting documents with your completed application.",
+                "Some applications may ask for a fee, so make sure you have your payment details ready.",
+                "You will be asked a few simple questions. You can review the answers to these questions before you submit them with your application."
+            ],
             "button": "Start now"
         },
         "cy": {
-            "serviceTitle": "Getting Started (whelsh)",
-            "banner": "This is a new service – your <a  class='govuk-link' href='#'>feedback</a> will help us to improve it. (whelsh)",
-            "heading": "Submit an application to HM Courts and Tribunal service (whelsh)",
-            "body": "<p class='govuk-body-l'>Use this service to upload and submit a completed application.<br/></br><span class='govuk-!-font-weight-bold'>Before you start</span><br/>You may be asked to upload supporting documents along with a completed application. <br/>Some application may require a fee payment, so make sure you have everything you need to hand before getting started.<br/><br/><span class=' govuk-!-font-weight-bold'>Submitting an application <br/></span>As well as uploading a completed application form, you will also be asked a handful of simple questions. You’ll be able to review and change the answers you give to these questions before you submit them - welsh. </p> ",
-            "button": "Start now - welsh"
+            "serviceTitle": "Getting Started(welsh)",
+            "bannerStart": "This is a new service – your(welsh)",
+            "bannerLink": "feedback(welsh)",
+            "bannerEnd": "will help us to improve it.(welsh)",
+            "warning":"You cannot save the progress for the application. So it is important you have everything you need before you get started(welsh)",
+            "heading": "Submit an application to HM Courts and Tribunal Services(welsh)",
+            "body": "Use this service to upload and submit a completed application.(welsh)",
+            "subHeading":"Before you start(welsh)",
+            "subBody":[
+                "You cannot save your progress so it is important you have everything you need before you start.(welsh)",
+                "You might need to upload supporting documents with your completed application.(welsh)",
+                "Some applications may ask for a fee, so make sure you have your payment details ready.(welsh)",
+                "You will be asked a few simple questions. You can review the answers to these questions before you submit them with your application.(welsh)"
+            ],
+            "button": "Start now(welsh)"
         }
     }
 }

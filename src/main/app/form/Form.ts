@@ -1,4 +1,4 @@
-//import { SummaryListContent } from '../../steps/common/models/summaryListContent';
+import { AppRequest } from '../../app/controller/AppRequest';
 import { Case, CaseDate, CaseWithId } from '../case/case';
 import { AnyObject } from '../controller/PostController';
 
@@ -14,7 +14,7 @@ export class Form {
     const fields = checkFields || this.fields;
 
     const parsedBody = Object.entries(fields)
-      .map(setupCheckboxParser(!!body.saveAndSignOut))
+      .map(setupCheckboxParser())
       .filter(([, field]) => typeof field?.parser === 'function')
       .flatMap(([key, field]) => {
         const parsed = field.parser?.(body);
@@ -48,13 +48,13 @@ export class Form {
 
     // if there are checkboxes or options, check them for errors
     if (isFormOptions(field)) {
-      const valuesErrors = field.values.flatMap(value => this.getErrorsFromField(body, value.name || id, value));
+      const valuesErrors = field.values.flatMap(value => this.getErrorsFromField(body, value.name ?? id, value));
 
       errors.push(...valuesErrors);
     }
     // if there are subfields and the current field is selected then check for errors in the subfields
     else if (field.subFields) {
-      if (body[id] === field.value || (body[id] && body[id].includes(field.value))) {
+      if (body[id] === field.value || body[id]?.includes(field.value)) {
         const subFields = Object.entries(field.subFields);
         const subFieldErrors = subFields.flatMap(([subId, subField]) => this.getErrorsFromField(body, subId, subField));
 
@@ -67,24 +67,30 @@ export class Form {
 
   public getFieldNames(): Set<string> {
     const fields = this.fields;
-    const fieldNames: Set<string> = new Set();
+    let fieldNames: Set<string> = new Set();
     for (const fieldKey in fields) {
       const stepField = fields[fieldKey] as FormOptions;
       if (stepField.values && stepField.type !== 'date') {
         for (const [, value] of Object.entries(stepField.values)) {
-          if (value.name) {
-            fieldNames.add(value.name);
-          } else {
-            fieldNames.add(fieldKey);
-          }
-          if (value.subFields) {
-            for (const field of Object.keys(value.subFields)) {
-              fieldNames.add(field);
-            }
-          }
+          fieldNames = this.populateFieldNames(value, fieldNames, fieldKey);
         }
       } else {
         fieldNames.add(fieldKey);
+      }
+    }
+
+    return fieldNames;
+  }
+
+  public populateFieldNames(value: FormInput, fieldNames: Set<string>, fieldKey: string): Set<string> {
+    if (value.name) {
+      fieldNames.add(value.name);
+    } else {
+      fieldNames.add(fieldKey);
+    }
+    if (value.subFields) {
+      for (const field of Object.keys(value.subFields)) {
+        fieldNames.add(field);
       }
     }
 
@@ -109,27 +115,28 @@ type Parser = (value: Record<string, unknown> | string[]) => void;
 
 type Label = string | LanguageLookup;
 
-type Warning = Label;
-
 export type ValidationCheck = (
   value: string | string[] | CaseDate | undefined,
   formData: Partial<Case>
 ) => void | string;
 export type FormFields = Record<string, FormField>;
-export type FormFieldsFn = (userCase: Partial<Case>) => FormFields;
+export type FormFieldsFn = (userCase: Partial<Case>, req: AppRequest) => FormFields;
 
 export interface FormContent {
   submit: {
     text: Label;
     classes?: string;
+    disabled?: boolean;
   };
   saveAsDraft?: {
     text: Label;
     classes?: string;
+    disabled?: boolean;
   };
   cancel?: {
     text: Label;
     classes?: string;
+    disabled?: boolean;
   };
   fields: FormFields | FormFieldsFn;
 }
@@ -171,7 +178,7 @@ export interface FormInput {
   attributes?: Partial<HTMLInputElement | HTMLTextAreaElement>;
   validator?: ValidationCheck;
   parser?: Parser;
-  warning?: Warning;
+  warning?: Label;
   conditionalText?: Label;
   subFields?: Record<string, FormField>;
   divider?: Label; //Required for divider between checkbox options
@@ -195,8 +202,7 @@ export type FormError = {
 
 interface CaseWithFormData extends CaseWithId {
   _csrf: string;
-  saveAndSignOut?: string;
-  saveBeforeSessionTimeout?: string;
+  saveAndContinue?: boolean;
   sendToApplicant2ForReview?: string;
   addAnotherName?: string;
   addAnotherNameHidden?: string;

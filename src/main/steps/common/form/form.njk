@@ -24,7 +24,8 @@
             preventDoubleClick: true,
             attributes: {
               id: 'main-form-submit'
-            }
+            },
+            disabled: true if form.submit.disabled else false
           }) if getContent(form.submit.text)
         }}
 
@@ -38,7 +39,8 @@
             value: true,
             attributes: {
               id: 'main-form-save-as-draft'
-            }
+            },
+            disabled: true if form.saveAsDraft.disabled else false
           }) if getContent(form.saveAsDraft.text)
         }}
 
@@ -52,18 +54,12 @@
             value: true,
             attributes: {
               id: 'main-form-cancel'
-            }
+            },
+            disabled: true if form.cancel.disabled else false
           }) if getContent(form.cancel.text)
         }}
       </div>
     {% endblock %}
     {% block after_form %}{% endblock %}
-
-    {# TODO uncomment this once we have save as draft fuctionality #}
-    {# <p class="govuk-body">
-      <button class="hmcts-button-link" type="submit" name="saveandsignout" value="true" data-prevent-double-click="true" data-module="govuk-button"/>
-      {{ saveAsDraft }}
-      </button>
-    </p>#}
   </div>
 </form>

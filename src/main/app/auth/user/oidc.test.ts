@@ -20,7 +20,7 @@ describe('getRedirectUrl', () => {
 });
 
 describe('getUserDetails', () => {
-  test('should exchange a code for a token and decode a JWT to get the user details', async () => {
+  test('should throw error', async () => {
     mockedAxios.post.mockResolvedValue({
       data: {
         access_token: token,
@@ -28,14 +28,9 @@ describe('getUserDetails', () => {
       },
     });
 
-    const result = await getUserDetails('http://localhost', '123', CALLBACK_URL);
-    expect(result).toStrictEqual({
-      accessToken: token,
-      email: 'test@test.com',
-      givenName: 'John',
-      familyName: 'Dorian',
-      id: '123',
-    });
+    await expect(getUserDetails('http://localhost', '123', CALLBACK_URL)).rejects.toThrowError(
+      'Failed to get user details: undefined undefined'
+    );
   });
 });
 

@@ -1,69 +1,33 @@
 import cookieManager from '@hmcts/cookie-manager';
 
-/*import { qs } from './selectors';
+cookieManager.on('UserPreferencesLoaded', preferences => {
+  const dataLayer = window.dataLayer || [];
+  dataLayer.push({ event: 'Cookie Preferences', cookiePreferences: preferences });
+});
 
-const cookieBanner = qs('#cm-cookie-banner');
-const cookieBannerDecision = cookieBanner?.querySelector('.govuk-cookie-banner__decision') as HTMLInputElement;
-const cookieBannerConfirmation = cookieBanner?.querySelector('.govuk-cookie-banner__confirmation') as HTMLInputElement;
-
-function getCookie(cname) {
-  const cookies = Object.fromEntries(
-    document.cookie.split(/; /).map(c => {
-      const [key, v] = c.split('=', 2);
-      return [key, decodeURIComponent(v)];
-    })
-  );
-  return cookies[cname] || '';
-}
-
-function setCookie(key, value, expiry) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + expiry * 24 * 60 * 60 * 1000);
-  document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
-}
-
-function cookieBannerAccept() {
-  const confirmationMessage = cookieBannerConfirmation?.querySelector('p') as HTMLInputElement;
-  confirmationMessage.innerHTML = 'You’ve accepted additional cookies. ' + confirmationMessage.innerHTML;
-  const getCookieFromBrowser = getCookie('ds-web-cookie-preferences');
-  setCookie('ds-web-cookie-preferences', getCookieFromBrowser, 365);
-}
-
-function cookieBannerReject() {
-  const confirmationMessage = cookieBannerConfirmation?.querySelector('p') as HTMLInputElement;
-  confirmationMessage.innerHTML = 'You’ve rejected additional cookies. ' + confirmationMessage.innerHTML;
-  const rejectedCookies = decodeURIComponent(JSON.stringify({ analytics: 'off', apm: 'off' }));
-  setCookie('ds-web-cookie-preferences', rejectedCookies, 365);
-}
-
-function cookieBannerSaved() {
-  cookieBannerDecision.hidden = true;
-  cookieBannerConfirmation.hidden = false;
-}
-
-function preferenceFormSaved() {
-  const message = qs('.cookie-preference-success') as HTMLInputElement;
-  message.style.display = 'block';
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
-
-function cookiePreferencesUpdated(cookieStatus) {
+cookieManager.on('UserPreferencesSaved', preferences => {
   const dataLayer = window.dataLayer || [];
   const dtrum = window.dtrum;
 
-  dataLayer.push({ event: 'Cookie Preferences', cookiePreferences: cookieStatus });
+  dataLayer.push({ event: 'Cookie Preferences', cookiePreferences: preferences });
 
   if (dtrum !== undefined) {
-    if (cookieStatus.apm === 'on') {
+    if (preferences.apm === 'on') {
       dtrum.enable();
       dtrum.enableSessionReplay();
     } else {
-      dtrum.disable();
       dtrum.disableSessionReplay();
+      dtrum.disable();
     }
   }
-}*/
+});
+
+cookieManager.on('PreferenceFormSubmitted', () => {
+  const message = document.querySelector('.cookie-preference-success') as HTMLElement;
+  message.style.display = 'block';
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+});
 
 cookieManager.init({
   userPreferences: {
@@ -77,12 +41,10 @@ cookieManager.init({
     },
     {
       categoryName: 'analytics',
-      optional: true,
-      cookies: ['_ga', '_gid'],
+      cookies: ['_ga', '_gid', '_gat_UA-'],
     },
     {
       categoryName: 'apm',
-      optional: true,
       cookies: ['dtCookie', 'dtLatC', 'dtPC', 'dtSa', 'rxVisitor', 'rxvt'],
     },
   ],

@@ -23,11 +23,17 @@
               "uploadDocuments": "List of forms uploaded (Application form)",
               "additionalDocuments": "List of Documents uploaded (supporting documents)",
               "typeOfApplication": "Type of application",
+              "selectedCourt": "Court details for application",
               "FGM": "FGM - FGM001 and FGM006 if a third party is submitting this application",
               "FMPO": "FMPO - FL401a and FL430 if a third party is submitting this application", 
               "SG": "Special Guardianship - form C1/form C13A",
               "DOP": "Declaration of Parentege - form C63",
-              "PO": "Parental orders - form C51"
+              "PO": "Parental orders - form C51",
+              "self": "I am applying for myself",
+              "forSomeone": "I am applying for someone else",
+              "forCourtStaff": "I am a member of court staff",
+               "emailToAccountOwner": "The account owner",
+              "emailToNamedPerson": "The person named on this application"
             }
         },
         "cy": {
@@ -53,11 +59,17 @@
               "uploadDocuments": "List of forms uploaded (Application form) - welsh",
               "additionalDocuments": "List of Documents uploaded (supporting documents) - welsh",
               "typeOfApplication": "Type of application - welsh",
+              "selectedCourt": "Court details for application - welsh",
               "FGM": "FGM - FGM001 and FGM006 if a third party is submitting this application -welsh",
               "FMPO": "FMPO - FL401a and FL430 if a third party is submitting this application -welsh", 
               "SG": "Special Guardianship - form C1/form C13A -welsh",
               "DOP": "Declaration of Parentege - form C63 -welsh",
-              "PO": "Parental orders - form C51 -welsh"
+              "PO": "Parental orders - form C51 -welsh",
+              "self": "I am applying for myself -welsh",
+              "forSomeone": "I am applying for someone else -welsh",
+              "forCourtStaff": "I am a member of court staff -welsh",
+              "emailToAccountOwner": "The account owner -welsh",
+              "emailToNamedPerson": "The person named on this application -welsh"
             }
         }
     }

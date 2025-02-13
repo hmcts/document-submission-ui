@@ -25,6 +25,7 @@ import { SessionStorage } from './modules/session';
 import { TooBusy } from './modules/too-busy';
 import { Webpack } from './modules/webpack';
 import { Routes } from './routes';
+import { PublicRoutes } from './routes/authless/routes';
 
 const { Logger } = require('@hmcts/nodejs-logging');
 
@@ -56,6 +57,7 @@ new Helmet(config.get('security')).enableFor(app);
 new AppInsights().enable();
 new FileUpload().enableFor(app);
 new SessionStorage().enableFor(app);
+new PublicRoutes().enableFor(app);
 new Nunjucks().enableFor(app);
 new CSRFToken().enableFor(app);
 new AuthProvider().enable();

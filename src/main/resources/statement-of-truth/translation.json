@@ -4,24 +4,34 @@
         "serviceName": "Statement of truth",
         "statementOfTruthLabel": "I believe that the facts stated in this application are true",
         "confirmStatement": "This confirms that the information you are submitting is true and accurate to the best of your knowledge. It's known as your 'statement of truth'.",
-        "continue": "Submit"
+        "proceedingsForContempt": "Proceedings for contempt of court may be brought against anyone who makes, or causes to be made, a false statement verified by a statement of truth without an honest belief in the truth.",
+        "submitApplication": "Submit application",
+        "continue": "Continue to payment",
+        "errors": {
+          "applicantStatementOfTruth": {
+            "required" : "Please accept the Statement of Truth to continue"
+          },
+          "paymentError": {
+            "title": "There is a problem",
+            "applicationNotSubmitted": "Your application is not submitted. Please try again"
+          }
+        }
       },
       "cy": {
         "serviceName": "Statement of truth (in Welsh)",
         "statementOfTruthLabel": "I believe that the facts stated in this application are true (in Welsh)",
         "confirmStatement": "This confirms that the information you are submitting is true and accurate to the best of your knowledge. It's known as your 'statement of truth'. (in Welsh)",
-        "continue": "Submit (in Welsh)"
-      }
-    },
-    "errors": {
-      "en": {
-        "applicantStatementOfTruth": {
-          "required" : "Please accept the Statement of Truth to continue"
-        }
+        "proceedingsForContempt": "Proceedings for contempt of court may be brought against anyone who makes, or causes to be made, a false statement verified by a statement of truth without an honest belief in the truth. (welsh)",
+        "submitApplication": "Submit application (welsh)",
+        "continue": "Continue to payment (in Welsh)"
       },
-      "cy": {
+      "errors": {
         "applicantStatementOfTruth": {
           "required" : "Please accept the Statement of Truth to continue (in Welsh)"
+        },
+        "paymentError": {
+          "title": "There is a problem (welsh)",
+          "applicationNotSubmitted": "Your application is not submitted. Please try again (welsh)"
         }
       }
     }

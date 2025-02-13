@@ -1,4 +1,6 @@
+import { mockRequest } from '../../../../test/unit/utils/mockRequest';
 import { mockUserCase1, mockUserCase2, mockUserCase3 } from '../../../../test/unit/utils/mockUserCase';
+import { AppSession } from '../../../app/controller/AppRequest';
 
 //mockUserCase2, mockUserCase3
 
@@ -9,8 +11,24 @@ import { AdditonalFormSummary, ApplicantSummaryList, UploadFormSummary, UserRole
 describe('upload-addition-documents > check-your-answers', () => {
   describe('applicationSummaryList', () => {
     test.each([
+      // {
+      //   session:{
+      //   userCase: {
+      //     ...mockUserCase1,
+      //     selectedCourtId:"12"
+      //   },
+      // },
       {
-        userCase: mockUserCase1,
+        req: {
+          ...mockRequest,
+          session: {
+            userCase: {
+              ...mockUserCase1,
+              selectedCourtId: '12',
+            },
+          },
+        },
+
         expected: {
           rows: [
             {
@@ -95,8 +113,8 @@ describe('upload-addition-documents > check-your-answers', () => {
           title: 'Applicant details',
         },
       },
-    ])('return correct summary list items when %#', ({ userCase, expected }) => {
-      expect(ApplicantSummaryList(enContent, userCase)).not.toBe(expected);
+    ])('return correct summary list items when %#', ({ req, expected }) => {
+      expect(ApplicantSummaryList(enContent, req.session as AppSession, 'en')).not.toBe(expected);
     });
   });
 });
@@ -105,7 +123,13 @@ describe('upload-addition-documents > named owner > check-your-answers', () => {
   describe('applicationSummaryList', () => {
     test.each([
       {
-        userCase: mockUserCase2,
+        session: {
+          userCase: {
+            ...mockUserCase2,
+            selectedCourtId: '12',
+          },
+        },
+
         expected: {
           rows: [
             {
@@ -190,8 +214,8 @@ describe('upload-addition-documents > named owner > check-your-answers', () => {
           title: 'Applicant details',
         },
       },
-    ])('return correct summary list items when %#', ({ userCase, expected }) => {
-      expect(ApplicantSummaryList(enContent, userCase)).not.toBe(expected);
+    ])('return correct summary list items when %#', ({ session, expected }) => {
+      expect(ApplicantSummaryList(enContent, session as AppSession, 'en')).not.toBe(expected);
     });
   });
 });
@@ -200,7 +224,12 @@ describe('upload-addition-documents > named owner and both > named owner > check
   describe('applicationSummaryList', () => {
     test.each([
       {
-        userCase: mockUserCase3,
+        session: {
+          userCase: {
+            ...mockUserCase3,
+            selectedCourtId: '12',
+          },
+        },
         expected: {
           rows: [
             {
@@ -298,8 +327,8 @@ describe('upload-addition-documents > named owner and both > named owner > check
           title: 'Applicant details',
         },
       },
-    ])('return correct summary list items when %#', ({ userCase, expected }) => {
-      expect(ApplicantSummaryList(enContent, userCase)).not.toBe(expected);
+    ])('return correct summary list items when %#', ({ session, expected }) => {
+      expect(ApplicantSummaryList(enContent, session as AppSession, 'en')).not.toBe(expected);
     });
   });
 });

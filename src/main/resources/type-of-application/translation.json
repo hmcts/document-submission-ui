@@ -23,12 +23,12 @@
     },
     "errors":{
         "en": {
-            "typeOfApplication": {
+            "edgeCaseTypeOfApplication": {
                 "required": "Please select a type of application"
             }
         },
         "cy": {
-            "typeOfApplication": {
+            "edgeCaseTypeOfApplication": {
                 "required": "Please select a type of application (in welsh)"
             }
         }

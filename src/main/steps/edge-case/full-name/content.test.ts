@@ -1,4 +1,4 @@
-import { FormContent, FormFields, FormOptions } from '../../../app/form/Form';
+import { FormContent, FormFields, FormFieldsFn, FormOptions } from '../../../app/form/Form';
 import { ResourceReader } from '../../../modules/resourcereader/ResourceReader';
 import { CommonContent } from '../../common/common.content';
 import { form as fullNameForm } from '../../common/components/full-name';
@@ -33,13 +33,21 @@ const cyContent = {
 describe('Applicant > full-name', () => {
   const fullNameFormFields = fullNameForm.fields as FormFields;
   const commonContent = { language: EN, userCase: {} } as CommonContent;
+  const commonContent1 = { language: EN } as CommonContent;
   let generatedContent;
   let form;
   let fields;
+  let generatedContent1;
+  let form1;
+  let fields1;
   beforeEach(() => {
     generatedContent = generateContent(commonContent);
     form = generatedContent.form as FormContent;
     fields = form.fields as FormFields;
+    delete commonContent1.userCase;
+    generatedContent1 = generateContent(commonContent1);
+    form1 = generatedContent1.form as FormContent;
+    fields1 = form1.fields as FormFieldsFn;
   });
 
   test('should return correct english content', () => {
@@ -56,6 +64,8 @@ describe('Applicant > full-name', () => {
   test('should contain firstNames field', () => {
     const firstNamesField = fields.applicantFirstName as FormOptions;
     expect(firstNamesField).toEqual(fullNameFormFields.firstNames);
+    const firstNamesField1 = fields1.applicantFirstName as FormOptions;
+    expect(firstNamesField1).toEqual(fullNameFormFields.firstNames);
   });
 
   test('should contain lastNames field', () => {
@@ -64,7 +74,10 @@ describe('Applicant > full-name', () => {
   });
 
   test('should contain continue button', () => {
-    expect(generatedContent.continue).toEqual(enContent.continue);
+    expect((form.submit.text as Function)(generatedContent)).toEqual('Continue');
+  });
+  test('should contain continue button1', () => {
+    expect((form1.submit.text as Function)(generatedContent1)).toEqual('Continue');
   });
 });
 /* eslint-enable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */

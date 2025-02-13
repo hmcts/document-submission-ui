@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { Session } from 'express-session';
 import type { LoggerInstance } from 'winston';
 
+import { PaymentError } from '../../app/case/definition';
 import { CaseApi } from '../case/CaseApi';
 import { Case, CaseWithId } from '../case/case';
 import { FormError } from '../form/Form';
@@ -20,19 +21,18 @@ export interface AppRequest<T = Partial<Case>> extends Request {
 export interface AppSession extends Session {
   csrfSecret: string;
   rpeToken: any;
-  caseDocuments: any;
-  AddtionalCaseDocuments: any;
   postDocs: any;
   cookieMessage: boolean;
   user: UserDetails;
   userCase: CaseWithId;
   eligibility: Eligibility;
   lang: string | undefined;
-  errors: FormError[] | undefined;
-  fileErrors: any[];
+  errors: FormError[];
   addresses: [];
   returnUrl?: string;
   cookieStorageMessage?: boolean;
+  paymentError: PaymentError;
+  applicationSettings: Record<string, any>;
 }
 
 export interface UserDetails {

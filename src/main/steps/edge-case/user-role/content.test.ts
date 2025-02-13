@@ -1,3 +1,4 @@
+import { TYPE_OF_APPLICATION } from '../../../app/case/definition';
 import { FormContent, FormFields, FormOptions } from '../../../app/form/Form';
 import { ResourceReader } from '../../../modules/resourcereader/ResourceReader';
 import { CommonContent } from '../../common/common.content';
@@ -30,7 +31,11 @@ const cyContent = {
 
 /* eslint-disable @typescript-eslint/ban-types */
 describe('role-type content', () => {
-  const commonContent = { language: EN, userCase: {} } as CommonContent;
+  const commonContent = {
+    language: EN,
+    userCase: { edgeCaseTypeOfApplication: TYPE_OF_APPLICATION.PARENTAL_ORDER },
+  } as CommonContent;
+  const commonContent1 = { language: EN, userCase: {} } as CommonContent;
   test('should return correct english content', () => {
     const generatedContent = generateContent(commonContent);
     expect(generatedContent.continue).toEqual(enContent.continue);
@@ -52,22 +57,32 @@ describe('role-type content', () => {
     expect(generatedContent.errors).toEqual(cyContent.errors);
   });
 
-  test('should contain namedApplicant field', () => {
+  test('should contain whomYouAreApplying field', () => {
     const generatedContent = generateContent(commonContent);
     const form = generatedContent.form as FormContent;
     const fields = form.fields as FormFields;
-    const namedApplicantField = fields.namedApplicant as FormOptions;
-    expect(namedApplicantField.type).toBe('radios');
-    expect(namedApplicantField.classes).toBe('govuk-radios');
-    expect((namedApplicantField.label as Function)(generatedContent)).toBe(enContent.label);
-    expect((namedApplicantField.values[0].label as Function)(generatedContent)).toBe(enContent.one);
-    expect((namedApplicantField.values[1].label as Function)(generatedContent)).toBe(enContent.two);
-    expect((namedApplicantField.values[2].label as Function)(generatedContent)).toBe(enContent.three);
+    const whomYouAreApplyingField = fields.whomYouAreApplying as FormOptions;
+    expect(whomYouAreApplyingField.type).toBe('radios');
+    expect(whomYouAreApplyingField.classes).toBe('govuk-radios');
+    expect((whomYouAreApplyingField.label as Function)(generatedContent)).toBe(enContent.label);
+    expect((whomYouAreApplyingField.values[0].label as Function)(generatedContent)).toBe(enContent.self);
+    expect((whomYouAreApplyingField.values[1].label as Function)(generatedContent)).toBe(enContent.forCourtStaff);
+    const generatedContent1 = generateContent(commonContent1);
+    const form1 = generatedContent1.form as FormContent;
+    const fields1 = form1.fields as FormFields;
+    const whomYouAreApplyingField1 = fields1.whomYouAreApplying as FormOptions;
+    expect(whomYouAreApplyingField1.type).toBe('radios');
+    expect(whomYouAreApplyingField1.classes).toBe('govuk-radios');
+    expect((whomYouAreApplyingField1.label as Function)(generatedContent)).toBe(enContent.label);
+    expect((whomYouAreApplyingField1.values[0].label as Function)(generatedContent)).toBe(enContent.self);
+    expect((whomYouAreApplyingField1.values[1].label as Function)(generatedContent)).toBe(enContent.forSomeone);
+    expect((whomYouAreApplyingField1.values[2].label as Function)(generatedContent)).toBe(enContent.forCourtStaff);
   });
 
   test('should contain continue button', () => {
     const generatedContent = generateContent(commonContent);
-    expect(generatedContent.continue).toEqual(enContent.continue);
+    const form = generatedContent.form as FormContent;
+    expect((form.submit.text as Function)(generatedContent)).toEqual('Continue');
   });
 });
 /* eslint-enable @typescript-eslint/ban-types */

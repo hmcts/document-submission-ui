@@ -1,4 +1,4 @@
-import { FormFields } from '../../../../app/form/Form';
+import { FormContent, FormFields } from '../../../../app/form/Form';
 import { ResourceReader } from '../../../../modules/resourcereader/ResourceReader';
 import { CommonContent } from '../../../common/common.content';
 import {
@@ -26,10 +26,16 @@ const cyContent = {
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
 describe('applicant > address > select > content', () => {
   const commonContent = { language: EN, userCase: {}, addresses: [] as any[] } as CommonContent;
+  const commonContent1 = { language: EN } as CommonContent;
   let generatedContent;
+  let generatedContentWithoutUsercase;
+  let form1;
 
   beforeEach(() => {
     generatedContent = generateContent(commonContent);
+    delete commonContent1.userCase;
+    generatedContentWithoutUsercase = generateContent(commonContent1);
+    form1 = generatedContentWithoutUsercase.form as FormContent;
   });
 
   test('should return correct english content', () => {
@@ -62,21 +68,20 @@ describe('applicant > address > select > content', () => {
   });
 
   it('should have applicantSelectAddress label when language: en', () => {
-    const commonContent1 = { language: EN, userCase: {} } as CommonContent;
-
-    const generatedContent1 = generateContent(commonContent1);
-    expect(generatedContent1.section).toBe(enContent.section);
+    expect(generatedContent.section).toBe(enContent.section);
   });
 
   it('should have applicantSelectAddress label when language: cy', () => {
-    const commonContent1 = { language: CY, userCase: {} } as CommonContent;
+    const commonContentCy = { language: CY, userCase: {} } as CommonContent;
 
-    const generatedContent1 = generateContent(commonContent1);
-    expect(generatedContent1.section).toBe(cyContent.section);
+    const generatedContentCy = generateContent(commonContentCy);
+    expect(generatedContentCy.section).toBe(cyContent.section);
   });
 
   test('should contain continue button', () => {
-    expect(generatedContent.continue).toEqual(enContent.continue);
+    const form = generatedContent.form as FormContent;
+    expect((form.submit.text as Function)(generatedContent)).toEqual('Continue');
+    expect((form1.submit.text as Function)(generatedContentWithoutUsercase)).toEqual('Continue');
   });
 });
 /* eslint-enable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */

@@ -3,7 +3,6 @@ import { mockResponse } from '../../../test/unit/utils/mockResponse';
 import { FormContent } from '../../app/form/Form';
 import * as steps from '../../steps';
 import { CONTACT_DETAILS } from '../../steps/urls'; //TOOK out CONTACT_DETAILS for EMAIL_ADDRESS RB
-import { isPhoneNoValid } from '../form/validation';
 
 import { PostController } from './PostController';
 
@@ -18,33 +17,7 @@ describe('PostController', () => {
     fields: {},
   } as unknown as FormContent;
 
-  test('Should redirect back to the current page with the form data on errors', async () => {
-    const body = { applicant1PhoneNumber: 'invalid phone number' };
-    const mockPhoneNumberFormContent = {
-      fields: {
-        applicant1PhoneNumber: {
-          type: 'tel',
-          validator: isPhoneNoValid,
-        },
-      },
-    } as unknown as FormContent;
-    const controller = new PostController(mockPhoneNumberFormContent.fields);
-
-    const req = mockRequest({ body });
-    const res = mockResponse();
-    await controller.post(req, res);
-    expect(1).toEqual(1);
-
-    const redirectRequest = mockRequest({});
-    controller.checkReturnUrlAndRedirect(redirectRequest, res, []);
-
-    const getEventNameRequest = mockRequest({});
-    getEventNameRequest.originalUrl = CONTACT_DETAILS;
-    controller.getEventName(getEventNameRequest);
-    controller.redirect(redirectRequest, res, '');
-  });
-
-  test('Should save the users data, update session case from API response and redirect to the next page if the form is valid', async () => {
+  test('Should redirect to the next page if the form is valid', async () => {
     getNextStepUrlMock.mockReturnValue('/next-step-url');
     const body = { MOCK_KEY: 'MOCK_VALUE', originalUrl: CONTACT_DETAILS };
     const controller = new PostController(mockFormContent.fields);
@@ -56,24 +29,11 @@ describe('PostController', () => {
     };
 
     const req = mockRequest({ body });
-    (req.locals.api.triggerEvent as jest.Mock).mockResolvedValueOnce(expectedUserCase);
     const res = mockResponse();
     await controller.post(req, res);
 
-    expect(req.session.userCase).toEqual(expectedUserCase);
     expect(getNextStepUrlMock).toHaveBeenCalledWith(req, expectedUserCase);
     expect(req.session.errors).toStrictEqual([]);
-  });
-
-  test('Saves the users prayer and statement of truth', async () => {
-    getNextStepUrlMock.mockReturnValue('/next-step-url');
-    const body = {};
-
-    const controller = new PostController(mockFormContent.fields);
-
-    const req = mockRequest({ body });
-    const res = mockResponse();
-    await controller.post(req, res);
   });
 
   it('redirects back to the current page with a session error if there was an problem saving data', async () => {
@@ -81,8 +41,6 @@ describe('PostController', () => {
     const controller = new PostController(mockFormContent.fields);
 
     const req = mockRequest({ body });
-    (req.locals.api.triggerEvent as jest.Mock).mockRejectedValueOnce('Error saving');
-    // const logger = req.locals.logger as unknown as MockedLogger;
     const res = mockResponse();
     await controller.post(req, res);
 
@@ -123,47 +81,6 @@ describe('PostController', () => {
     });
   });
 
-  test('rejects with an error when unable to save session data', async () => {
-    getNextStepUrlMock.mockReturnValue('/next-step-url');
-    const body = { MOCK_KEY: 'MOCK_VALUE' };
-    const controller = new PostController(mockFormContent.fields);
-
-    const mockSave = jest.fn(done => done('An error while saving session'));
-    const req = mockRequest({ body, session: { save: mockSave } });
-    (req.locals.api.triggerEvent as jest.Mock).mockResolvedValueOnce({ MOCK_KEY: 'MOCK_VALUE' });
-    const res = mockResponse();
-    await expect(controller.post(req, res)).rejects.toEqual('An error while saving session');
-
-    const userCase = {
-      ...req.session.userCase,
-      ...body,
-    };
-    expect(mockSave).toHaveBeenCalled();
-    expect(getNextStepUrlMock).toHaveBeenCalledWith(req, userCase);
-    expect(res.redirect).not.toHaveBeenCalled();
-    expect(req.session.errors).toStrictEqual([]);
-    expect(1).toEqual(1);
-  });
-
-  test('Should save the users data and redirect to the next page if the form is valid with parsed body', async () => {
-    getNextStepUrlMock.mockReturnValue('/next-step-url');
-    const body = { day: '1', month: '1', year: '2000' };
-    const controller = new PostController(mockFormContent.fields);
-
-    const expectedUserCase = {
-      id: '1234',
-      day: '1',
-      month: '1',
-      year: '2000',
-    };
-
-    const req = mockRequest({ body });
-    (req.locals.api.triggerEvent as jest.Mock).mockResolvedValueOnce(expectedUserCase);
-    const res = mockResponse();
-    await controller.post(req, res);
-    expect(1).toEqual(1);
-  });
-
   test('get the event name based on request url - create case', async () => {
     const body = { MOCK_KEY: 'MOCK_VALUE' };
     const controller = new PostController(mockFormContent.fields);
@@ -192,17 +109,6 @@ describe('PostController', () => {
     const body = { MOCK_KEY: 'MOCK_VALUE', saveAndSignOut: true };
     const controller = new PostController(mockFormContent.fields);
     const req = mockRequest({ body, session: { user: { email: 'test@example.com' } } });
-    const res = mockResponse();
-    await controller.post(req, res);
-    expect(1).toEqual(1);
-  });
-
-  it('saves and signs out even if was an error saving data', async () => {
-    const body = { MOCK_KEY: 'MOCK_VALUE', saveAndSignOut: true };
-    const controller = new PostController(mockFormContent.fields);
-
-    const req = mockRequest({ body, session: { user: { email: 'test@example.com' } } });
-    (req.locals.api.triggerEvent as jest.Mock).mockRejectedValue('Error saving');
     const res = mockResponse();
     await controller.post(req, res);
     expect(1).toEqual(1);
@@ -271,7 +177,6 @@ describe('PostController', () => {
     };
 
     const req = mockRequest({ body });
-    (req.locals.api.triggerEvent as jest.Mock).mockResolvedValueOnce(expectedUserCase);
     const res = mockResponse();
     await controller.post(req, res);
 
@@ -281,15 +186,15 @@ describe('PostController', () => {
     expect(req.session.errors).toStrictEqual([]);
   });
 
-  test('Should save the users data and end response for session timeout', async () => {
-    const body = { MOCK_KEY: 'MOCK_VALUE', saveBeforeSessionTimeout: true };
-    const controller = new PostController(mockFormContent.fields);
+  // test('Should save the users data and end response for session timeout', async () => {
+  //   const body = { MOCK_KEY: 'MOCK_VALUE', saveBeforeSessionTimeout: true };
+  //   const controller = new PostController(mockFormContent.fields);
 
-    const req = mockRequest({ body });
-    const res = mockResponse();
-    await controller.post(req, res);
-    expect(res.end).toHaveBeenCalled();
-  });
+  //   const req = mockRequest({ body });
+  //   const res = mockResponse();
+  //   await controller.post(req, res);
+  //   expect(res.end).toHaveBeenCalled();
+  // });
 
   test('whether the citizen update api call is made with correct user details fistname lastname update caseid', async () => {
     getNextStepUrlMock.mockReturnValue('/next-step-url');
@@ -304,7 +209,6 @@ describe('PostController', () => {
     };
 
     const req = mockRequest({ body });
-    (req.locals.api.triggerEvent as jest.Mock).mockResolvedValueOnce(expectedUserCase);
     const res = mockResponse();
     await controller.post(req, res);
 

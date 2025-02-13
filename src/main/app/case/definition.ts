@@ -1,3 +1,5 @@
+import { State } from './CaseApi';
+
 export interface Address {
   AddressLine1: string;
   AddressLine2: string;
@@ -11,9 +13,13 @@ export interface Address {
 export enum ContactPreference {
   ACCOUNT_OWNER = 'ACCOUNT_OWNER',
   NAMED_PERSON = 'NAMED_PERSON',
-  BOTH_RECEIVE = 'BOTH_RECEIVE',
 }
 
+export enum UserRole {
+  SELF = 'self',
+  FOR_SOMEONE = 'forSomeone',
+  COURT_STAFF = 'forCourtStaff',
+}
 export type AddressUK = Address;
 
 export interface CaseLink {
@@ -24,6 +30,28 @@ export interface Document {
   document_url: string;
   document_filename: string;
   document_binary_url: string;
+}
+
+export interface DocumentUploadResponse {
+  status: string;
+  document: DocumentResponse;
+}
+
+export type DocumentResponse = {
+  document_url: string;
+  document_binary_url: string;
+  document_filename: string;
+  document_hash: string;
+  document_creation_date: string;
+};
+
+export interface DocumentReference {
+  id: string;
+  value: {
+    document_url: string;
+    document_filename: string;
+    document_binary_url: string;
+  };
 }
 
 export interface DynamicList {
@@ -58,25 +86,14 @@ export interface OrderSummary {
 
 export interface CaseNote {
   author: string;
-  date: DateAsString;
+  date: string;
   note: string;
 }
 
 export interface Applicant {
-  applicantFirstName: string;
-  applicantLastName: string;
-  applicantEmailAddress: string;
-  applicantDateOfBirth: DateAsString;
-  applicantPhoneNumber: string;
-  applicantHomeNumber: string;
-  PhoneNumber: string;
-  applicantAddress1: string;
-  applicantAddress2: string;
-  applicantAddressTown: string;
-  applicantAddressCountry: string;
-  applicantAddressPostCode: string;
+  id: string;
+  value: PartyDetails;
 }
-
 export interface Application {
   applicantStatementOfTruth: YesOrNo;
 }
@@ -87,20 +104,70 @@ export const enum ContactDetails {
 }
 
 export interface CaseData {
-  caseID: string;
-  namedApplicant: YesOrNo;
-  applicantFirstName: string;
-  applicantLastName: string;
-  applicantDateOfBirth: string;
-  applicantEmailAddress: string;
-  applicantPhoneNumber: string;
-  applicantHomeNumber: string;
-  applicantAddress1: string;
-  applicantAddress2: string;
-  applicantAddressTown: string;
-  applicantAddressCountry: any;
-  applicantAddressPostCode: any;
-  applicantStatementOfTruth: YesOrNo;
+  id: string;
+  state: State;
+  createdDate: string;
+  lastModifiedDate: string;
+  applicantCaseName: string;
+  applicants: Applicant[];
+  applicantsFL401: PartyDetails;
+  edgeCaseTypeOfApplication: TYPE_OF_APPLICATION;
+  caseTypeOfApplication: CASE_TYPE_OF_APPLICATION;
+  caseCreatedBy: string;
+  dssUploadedDocuments: DocumentReference[];
+  dssUploadedAdditionalDocuments: DocumentReference[];
+  dssCaseData: string;
+}
+export interface PartyDetails {
+  email: string;
+  gender: string;
+  address: Address;
+  dxNumber: string;
+  landline: string;
+  lastName: string;
+  firstName: string;
+  dateOfBirth: string;
+  otherGender: string;
+  phoneNumber: string;
+  placeOfBirth: string;
+  previousName: string;
+  sendSignUpLink: string;
+  solicitorEmail: string;
+  isAddressUnknown: string;
+  isDateOfBirthKnown: string;
+  solicitorReference: string;
+  solicitorTelephone: string;
+  isPlaceOfBirthKnown: string;
+  isDateOfBirthUnknown: string;
+  isAddressConfidential: string;
+  isCurrentAddressKnown: string;
+  relationshipToChildren: string;
+  representativeLastName: string;
+  representativeFirstName: string;
+  canYouProvidePhoneNumber: string;
+  canYouProvideEmailAddress: string;
+  isAtAddressLessThan5Years: string;
+  isPhoneNumberConfidential: string;
+  isEmailAddressConfidential: string;
+  respondentLivedWithApplicant: string;
+  doTheyHaveLegalRepresentation: string;
+  addressLivedLessThan5YearsDetails: string;
+  otherPersonRelationshipToChildren: string[];
+  isAtAddressLessThan5YearsWithDontKnow: string;
+  response: Response;
+  user: User;
+  contactPreferences?: ContactPreference | null;
+  isRemoveLegalRepresentativeRequested?: YesOrNo;
+  partyId: string;
+  liveInRefuge: YesOrNo;
+  refugeConfidentialityC8Form?: Document | null;
+}
+
+export interface User {
+  email: string;
+  idamId: string;
+  solicitorRepresented?: string;
+  pcqId?: string;
 }
 
 export interface StatusHistoriesItem {
@@ -112,7 +179,11 @@ export interface StatusHistoriesItem {
   error_message: string;
 }
 
-export type DateAsString = string;
+export interface CourtListOptions {
+  epimms_id: string;
+  site_name: string;
+  court_name: string;
+}
 
 export const enum FieldType {
   Unspecified = 'Unspecified',
@@ -260,10 +331,11 @@ export const CITIZEN_SAVE_AND_CLOSE = 'citizen-save-and-close';
 export const CITIZEN_UPDATE = 'UPDATE';
 export const CITIZEN_CREATE = 'CREATE';
 export const CITIZEN_SUBMIT = 'SUBMIT';
-
-export const enum DSS_CASE_EVENT {
-  DSS_CASE_SUBMIT = 'citizen-dss-case-submit',
-  UPDATE_CASE = 'citizen-case-update',
+export const enum CASE_EVENT {
+  UPDATE_CASE = 'updateDssEdgeCase',
+  SUBMIT_CA_CASE = 'submitDssCaEdgeCase',
+  SUBMIT_CA_CASE_WITH_HWF = 'submitDssCaEdgeCaseWithHwf',
+  SUBMIT_DA_CASE = 'submitDssDaEdgeCase',
 }
 
 export const enum CASE_TYPE_OF_APPLICATION {
@@ -271,10 +343,33 @@ export const enum CASE_TYPE_OF_APPLICATION {
   FL401 = 'FL401',
 }
 
-export const enum TYPE_OF_APPLICATION {
+export enum TYPE_OF_APPLICATION {
   FGM = 'FGM',
   FMPO = 'FMPO',
-  SPECIAL_GUARDIANSHIP = 'SG',
-  DECLARATION_OF_PARENTEGE = 'DOP',
-  PARENTAL_ORDERS = 'PO',
+  SPECIAL_GUARDIANSHIP_ORDER = 'SG',
+  DECLARATION_OF_PARENTAGE = 'DOP',
+  PARENTAL_ORDER = 'PO',
+}
+
+export interface PaymentError {
+  hasError: boolean;
+  errorContext: PaymentErrorContext | null;
+}
+
+export enum PaymentErrorContext {
+  DEFAULT_PAYMENT_ERROR = 'defaultPaymentError',
+  PAYMENT_UNSUCCESSFUL = 'paymentUnsuccessful',
+  APPLICATION_NOT_SUBMITTED = 'applicationNotSubmitted',
+}
+
+export type UploadDocument = {
+  id: string;
+  value: {
+    documentLink: Document;
+  };
+};
+
+export enum UploadDocumentContext {
+  UPLOAD_YOUR_DOCUMENTS = 'upload-your-documents',
+  UPLOAD_ADDITIONAL_DOCUMENTS = 'upload-additional-documents',
 }

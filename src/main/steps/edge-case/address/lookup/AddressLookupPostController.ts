@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import autobind from 'autobind-decorator';
 
-import AddressLookupPostControllerBase from '../../../../app/address/AddressLookupPostControllerBase';
+import { AddressLookupPostControllerBase } from '../../../../app/address/AddressLookupPostControllerBase';
 import { FieldPrefix } from '../../../../app/case/case';
 import { FormFields, FormFieldsFn } from '../../../../app/form/Form';
 

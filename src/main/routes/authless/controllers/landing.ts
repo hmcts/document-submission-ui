@@ -26,7 +26,7 @@ const edgeCaseTypeQueryValidations = (req: Request, res: Response, loginURL, Sys
 
 export const LandingController = (req: Request, res: Response): void => {
   const loginURL = SIGN_IN_URL;
-  if (req.session.hasOwnProperty('user')) {
+  if (req?.session?.hasOwnProperty('user')) {
     res.redirect(TYPE_OF_APPLICATION_URL);
   } else {
     try {

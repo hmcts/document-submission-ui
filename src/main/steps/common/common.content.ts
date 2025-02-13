@@ -24,11 +24,14 @@ const en = {
   required: 'You have not answered the question. You need to select an answer before continuing.',
   notAnswered: 'You have not answered the question.',
   errorSaving: 'Sorry, we’re having technical problems saving your application. Please try again in a few minutes.',
+  errorFetchingFee:
+    'Sorry, we’re having technical problems getting the fee information for your application. Please try again in a few minutes.',
+  errorPaymentRedirect:
+    'Sorry, we’re having technical problems redirecting you to payment. Please try again in a few minutes.',
   errorSendingInvite:
     'Sorry, we’re having technical problems sending your application for review. Please try again in a few minutes.',
   ogl: 'All content is available under the <a class="govuk-link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated',
   errorSummaryHeading: 'There is a problem',
-  saveAndSignOut: 'Save and sign out',
   saveAsDraft: 'Save as draft',
   cancel: 'Cancel',
   signOut: 'Sign out',
@@ -107,6 +110,10 @@ const en = {
   apmCookiesHeadings: 'Allow cookies that measure website application performance monitoring?',
   useApmCookies: 'Use cookies that measure website application performance monitoring',
   doNotUseApmCookies: 'Do not use cookies that measure website application performance monitoring',
+  cookiesAcceptedPart1: 'You’ve accepted additional cookies. You can',
+  cookiesAcceptorRejectPart2: 'change your cookie settings',
+  cookiesAcceptorRejectPart3: 'at any time.',
+  cookiesRejectedPart1: 'You’ve rejected additional cookies. You can',
 };
 
 const cy: typeof en = {
@@ -129,9 +136,12 @@ const cy: typeof en = {
   notAnswered: 'Nid ydych wedi ateb y cwestiwn.',
   errorSaving:
     "Mae'n ddrwg gennym, rydym yn cael problemau technegol wrth geisio cadw eich cais. Rhowch gynnig arall arni mewn ychydig funudau.",
+  errorPaymentRedirect:
+    'Sorry, we’re having technical problems redirecting you to payment. Please try again in a few minutes. (welsh)',
+  errorFetchingFee:
+    'Sorry, we’re having technical problems getting the fee information for your application. Please try again in a few minutes. (welsh)',
   ogl: 'Mae’r holl gynnwys ar gael o dan <a class="govuk-link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license" >Drwydded Agored y Llywodraeth f3.0</a>, oni nodir fel arall',
   errorSummaryHeading: 'There is a problem (in welsh)',
-  saveAndSignOut: 'Cadw ac allgofnodi',
   saveAsDraft: 'Save as draft (in welsh)',
   signOut: 'Sign out (in welsh)',
   signIn: 'Sign in (in welsh)',
@@ -189,18 +199,20 @@ export const generatePageContent = ({
   pageContent,
   userCase,
   uploadedDocuments,
-  AddDocuments,
+  addDocuments,
   userEmail,
   addresses = [],
+  additionalData,
   fee,
 }: {
   language: Language;
   pageContent?: TranslationFn;
   userCase?: Partial<CaseWithId>;
   uploadedDocuments?: any;
-  AddDocuments?: any;
+  addDocuments?: any;
   userEmail?: string;
   addresses?: [];
+  additionalData?: CommonContentAdditionalData;
   fee?: Fee;
 }): PageContent => {
   const commonTranslations: typeof en = language === 'en' ? en : cy;
@@ -213,10 +225,11 @@ export const generatePageContent = ({
     language,
     userCase,
     uploadedDocuments,
-    AddDocuments,
+    addDocuments,
     userEmail,
     contactEmail,
     addresses,
+    additionalData,
     // eligibility,
     fee,
   };
@@ -238,14 +251,20 @@ export type CommonContent = typeof en & {
   pageContent?: TranslationFn;
   userCase?: Partial<CaseWithId>;
   uploadedDocuments?: any;
-  AddDocuments?: any;
+  addDocuments?: any;
   userEmail?: string;
   contactEmail?: string;
   referenceNumber?: string;
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   addresses?: any[];
   eligibility?: Eligibility;
+  additionalData?: CommonContentAdditionalData;
   fee?: Fee;
+};
+
+export type CommonContentAdditionalData = {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  [key: string]: any;
 };
 
 export type Language = 'en' | 'cy';

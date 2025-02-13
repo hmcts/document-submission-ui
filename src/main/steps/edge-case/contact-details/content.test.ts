@@ -85,8 +85,10 @@ describe('contact-number-content', () => {
     const mobilePhoneNumberOption = fields.applicantPhoneNumber as FormOptions;
     expect((mobilePhoneNumberOption.label as Function)(generatedContent)).toBe(enContent.mobilePhoneLabel);
     expect((mobilePhoneNumberOption.validator as Function)(null, mobilePhoneNumberOption)).toBe('atleastOneRequired');
+    expect((mobilePhoneNumberOption.validator as Function)([''], mobilePhoneNumberOption)).toBe(undefined);
     const homePhoneNumberOption = fields.applicantHomeNumber as FormOptions;
     expect((homePhoneNumberOption.label as Function)(generatedContent)).toBe(enContent.homePhoneLabel);
     expect((homePhoneNumberOption.validator as Function)(null, homePhoneNumberOption)).toBe('atleastOneRequired');
+    expect((homePhoneNumberOption.validator as Function)('12', homePhoneNumberOption)).toBe(undefined);
   });
 });

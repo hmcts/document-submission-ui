@@ -10,7 +10,6 @@ const saveBeforeSessionTimeout = async () => {
   const form = document.getElementById('main-form');
   if (form) {
     const formData = new FormData(form as HTMLFormElement);
-    formData.append('saveBeforeSessionTimeout', 'true');
     const url = window.location.pathname;
     const body = Object.fromEntries(formData);
     await fetch(url, {

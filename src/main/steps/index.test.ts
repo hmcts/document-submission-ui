@@ -1,9 +1,10 @@
 import { mockRequest } from '../../test/unit/utils/mockRequest';
 import { AppRequest } from '../app/controller/AppRequest';
 
+import { edgecaseSequence } from './edge-case/edgecaseSequence';
 import { APPLYING_WITH_URL, TASK_LIST_URL } from './urls';
 
-import { getNextIncompleteStepUrl, getNextStepUrl } from './index';
+import { getNextIncompleteStepUrl, getNextStepUrl, getStepsWithContent } from './index';
 
 describe('getNextIncompleteStepUrl()', () => {
   it('returns the next step when correct details a passed', () => {
@@ -48,6 +49,13 @@ describe('Steps', () => {
       const data = {};
       mockReq.body['saveAsDraft'] = true;
       expect(getNextStepUrl(mockReq, data)).not.toBe(TASK_LIST_URL);
+    });
+
+    it('getStepsWithContent with sub directories', () => {
+      expect(getStepsWithContent(edgecaseSequence, '/')).not.toBe(undefined);
+    });
+    it('getStepsWithContent with no sub directories', () => {
+      expect(getStepsWithContent(edgecaseSequence)).not.toBe(undefined);
     });
   });
 });

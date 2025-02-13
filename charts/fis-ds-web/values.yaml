@@ -17,7 +17,7 @@ nodejs:
     IDAM_WEB_URL: 'https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net/login'
     IDAM_API_URL: 'https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net/o/token'
     REDIS_HOST: 'fis-dss-create-case-redis-{{ .Values.global.environment }}.redis.cache.windows.net'
-    FIS_COS_API: 'http://prl-cos-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal'
+    FIS_COS_API: 'https://prl-cos-pr-1485.preview.platform.hmcts.net'
 
   keyVaults:
     fis-kv:

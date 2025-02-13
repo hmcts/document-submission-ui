@@ -4,27 +4,27 @@
             "continue": "Continue",
             "serviceName": "Determine user's role",
             "label": "Are you applying for yourself or someone else?",
-            "one": " I am applying for myself",
-            "two": " I am applying for someone else",
-            "three": "I am a court staff"
+            "self": " I am applying for myself",
+            "forSomeone": " I am applying for someone else",
+            "forCourtStaff": "I am a member of court staff"
         },
         "cy": {
             "continue": "Continue",
             "serviceName": "Determine user's role (in welsh)",
             "label": "Are you applying for yourself or someone else? (in welsh)",
-            "one": "I am applying for myself (in welsh)",
-            "two": "I am applying for someone else (in welsh)",
-            "three": "I am a court staff (in welsh)"
+            "self": "I am applying for myself (in welsh)",
+            "forSomeone": "I am applying for someone else (in welsh)",
+            "forCourtStaff": "I am a member of court staff (in welsh)"
         }
     },
     "errors":{
         "en": {
-            "namedApplicant": {
+            "whomYouAreApplying": {
                 "required": "Please select an answer before you can proceed further"
             }
         },
         "cy": {
-            "namedApplicant": {
+            "whomYouAreApplying": {
                 "required": "Please select an answer before you can proceed further (in welsh)"
             }
         }

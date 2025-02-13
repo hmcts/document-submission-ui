@@ -1,10 +1,13 @@
 import * as fs from 'fs';
 
+import { NextFunction } from 'express';
+
 import { Case, CaseWithId } from '../app/case/case';
 import { AppRequest } from '../app/controller/AppRequest';
 import { TranslationFn } from '../app/controller/GetController';
 import { Form, FormContent } from '../app/form/Form';
 
+import { parseUrl } from './common/url-parser';
 import { Step } from './constants';
 import { edgecaseSequence } from './edge-case/edgecaseSequence';
 import { EDGE_CASE_URL, TYPE_OF_APPLICATION_URL } from './urls';
@@ -97,19 +100,27 @@ const getStepFiles = (stepDir: string) => {
   return { content, view };
 };
 
+type RouteGuard = {
+  get?: (req: AppRequest, res: Response, next: NextFunction) => Promise<void>;
+  post?: (req: AppRequest, res: Response, next: NextFunction) => Promise<void>;
+};
+
 export type StepWithContent = Step & {
   stepDir: string;
   generateContent: TranslationFn;
   form: FormContent;
   view: string;
+  routeGuard?: RouteGuard;
 };
 
-const getStepsWithContent = (sequence: Step[], subDir = ''): StepWithContent[] => {
+export const getStepsWithContent = (sequence: Step[], subDir = ''): StepWithContent[] => {
   const dir = __dirname;
 
   const results: StepWithContent[] = [];
   for (const step of sequence) {
-    const stepDir = `${dir}${step.url.startsWith(subDir) ? step.url : `${subDir}${step.url}`}`;
+    const { url } = parseUrl(step.url);
+    const subdirurl = url.startsWith(subDir) ? url : `${subDir}${url}`;
+    const stepDir = `${dir}${subdirurl}`;
     const { content, view } = getStepFiles(stepDir);
     results.push({ stepDir, ...step, ...content, view });
   }

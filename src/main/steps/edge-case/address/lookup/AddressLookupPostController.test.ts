@@ -1,6 +1,6 @@
-import AddressLookupPostControllerBase from '../../../../app/address/AddressLookupPostControllerBase';
+import { AddressLookupPostControllerBase } from '../../../../app/address/AddressLookupPostControllerBase';
 
-import AddressLookupPostController from './AddressLookupPostController';
+import { AddressLookupPostController } from './AddressLookupPostController';
 
 describe('applicant1 > address > lookup > AddressLookupPostController', () => {
   let controller;

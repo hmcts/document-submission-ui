@@ -58,18 +58,20 @@ describe('role-type content', () => {
     const generatedContent = generateContent(commonContent);
     const form = generatedContent.form as FormContent;
     const fields = form.fields as FormFields;
-    const typeOfApplication = fields.typeOfApplication as FormOptions;
+    const typeOfApplication = fields.edgeCaseTypeOfApplication as FormOptions;
     expect(typeOfApplication.type).toBe('radios');
     expect(typeOfApplication.classes).toBe('govuk-radios');
     expect((typeOfApplication.label as Function)(generatedContent)).toBe(enContent.label);
     expect((typeOfApplication.values[0].label as Function)(generatedContent)).toBe(enContent.fgm);
     expect((typeOfApplication.values[1].label as Function)(generatedContent)).toBe(enContent.fmpo);
     expect((typeOfApplication.values[2].label as Function)(generatedContent)).toBe(enContent.sg);
+    expect((typeOfApplication.values[3].label as Function)(generatedContent)).toBe(enContent.dop);
+    expect((typeOfApplication.values[4].label as Function)(generatedContent)).toBe(enContent.po);
   });
 
   test('should contain continue button', () => {
     const generatedContent = generateContent(commonContent);
-    expect(generatedContent.continue).toEqual(enContent.continue);
+    expect(generatedContent.submit).toEqual(enContent.saveAndContinue);
   });
 });
 /* eslint-enable @typescript-eslint/ban-types */

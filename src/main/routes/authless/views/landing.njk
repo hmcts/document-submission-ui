@@ -18,6 +18,12 @@
 {%set language = "Cyramaeg"%}
 {%endif%}
 
+{% set html %}
+  {{ content.bannerStart }} <a  class='govuk-link' href='#'> {{ content.bannerLink }}</a> {{ content.bannerEnd }}
+  
+{% endset %}
+
+
 
 
 {% block beforeContent %}
@@ -25,7 +31,7 @@
   tag: {
     text: "BETA"
   },
-  html: content.banner +'<span class="float-right"><a href="?lang='+ToggleLanguage+'" class="govuk-link ">'+language+'</a></span>'
+  html: html +'<span class="float-right"><a href="?lang='+ToggleLanguage+'" class="govuk-link ">'+language+'</a></span>'
 }) }}
 {% endblock %}
 
@@ -33,14 +39,18 @@
 {% block content %}
 
 {{ govukWarningText({
-  text: "You cannot save the progress for the application. So it is important you have everything you need before you get started ",
+  text: content.warning,
   iconFallbackText: "Warning"
 }) }}
 
-{{languagetext}}
+
 
 <h1 class="govuk-heading-l">{{content['heading']}}</h1>
-<p class="govuk-body-l">{{content['body'] | safe}}</p>
+<p class="govuk-body-l">{{content['body']}}</p>
+<h2 class="govuk-heading-m">{{content['subHeading']}}</h1>
+{% for item in content.subBody %}
+      <p class="govuk-body-l"> {{item}} </p>
+{% endfor %}
 
 <br/>
 

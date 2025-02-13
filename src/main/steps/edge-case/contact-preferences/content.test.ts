@@ -77,9 +77,6 @@ describe('contact-preferences', () => {
     expect((field.values[1].label as Function)(generatedContent)).toBe(en.namedPerson);
     expect(field.values[1].value).toBe(ContactPreference.NAMED_PERSON);
 
-    expect((field.values[2].label as Function)(generatedContent)).toBe(en.bothReceiveEmail);
-    expect(field.values[2].value).toBe(ContactPreference.BOTH_RECEIVE);
-
     expect(field.validator).toBe(isFieldFilledIn);
   });
 

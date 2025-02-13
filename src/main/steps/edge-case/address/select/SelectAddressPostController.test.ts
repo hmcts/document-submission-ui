@@ -1,7 +1,7 @@
-import SelectAddressPostControllerBase from '../../../../app/address/SelectAddressPostControllerBase';
+import { SelectAddressPostControllerBase } from '../../../../app/address/SelectAddressPostControllerBase';
 import { FieldPrefix } from '../../../../app/case/case';
 
-import SelectAddressPostController from './SelectAddressPostController';
+import { SelectAddressPostController } from './SelectAddressPostController';
 
 describe('applicant1 > address > select > SelectAddressPostController', () => {
   let controller;

@@ -1,0 +1,40 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "common/fileupload/macro.njk" import fileUpload with context %}
+
+{% extends "common/page.njk" %}
+
+{% block page_content %}
+  <h1 class="govuk-heading-l">{{ title }}</h1>
+  <p class="govuk-body">{{ youNeed }}</p>
+  <p class="govuk-body">{{ youNeed2 }}</p>
+  <p class="govuk-body">{{ youNeed3 }}</p>
+  <p class="govuk-body">{{ youNeed4 }}</p>
+
+  {% set uploadRequirementList = "<div class='govuk-body-s'><ul class=‘govuk-list govuk-list--bullet’>"%}
+  {% for item in uploadRequirement %}
+    {% set uploadRequirementList = uploadRequirementList + "<li>" + item + "</li>"%}
+  {% endfor %}
+
+  {{ fileUpload({
+      name: "additionalApplicationUpload",
+      id: "additionalApplicationUpload",
+      uploadButtonText: fileUploadConfig.uploadButtonText,
+      labelText: fileUploadConfig.labelText,
+      hintText: fileUploadConfig.hintText,
+      allowedFileTypes: "image/jpg,image/jpeg,application/rtf,image/bmp,image/png,image/tiff,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,text/rtf,image/gif",
+      uploadUrl: "",
+      uploadedFiles: fileUploadConfig.uploadedFiles,
+      errorMessage: fileUploadConfig.errorMessage,
+      uploadedFilesCaption: fileUploadConfig.uploadedFilesCaption,
+      noFilesText: fileUploadConfig.noFilesText,
+      removeFileText: fileUploadConfig.removeFileText,
+      token: csrfToken,
+      summaryText: fileUploadConfig.summaryText,
+      uploadRequirementText: uploadRequirementList
+    }) }}
+
+{% endblock %}

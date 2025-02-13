@@ -1,10 +1,17 @@
 import { AnyObject } from '../controller/PostController';
 
-import { Applicant, CaseData, TYPE_OF_APPLICATION, YesOrNo } from './definition';
+import { State } from './CaseApi';
+import {
+  CASE_TYPE_OF_APPLICATION,
+  CaseData,
+  ContactPreference,
+  Document,
+  TYPE_OF_APPLICATION,
+  UserRole,
+  YesOrNo,
+} from './definition';
 
-export const formFieldsToCaseMapping: Partial<Record<keyof Case, keyof CaseData>> = {
-  applicantDateOfBirth: 'applicantDateOfBirth',
-};
+export const formFieldsToCaseMapping: Partial<Record<keyof Case, keyof CaseData>> = {};
 
 export function formatCase<InputFormat, OutputFormat>(fields: FieldFormats, data: InputFormat): OutputFormat {
   const result = {};
@@ -24,7 +31,26 @@ export type FieldFormats = Record<string, string | ((AnyObject) => AnyObject)>;
 
 export interface CaseWithId extends Case {
   id: string;
-  state: any;
+  state: State;
+  paymentDetails?: {
+    payment_reference: string;
+    date_created: string;
+    external_reference: string;
+    next_url: string;
+    status: string;
+    serviceRequestReference: string;
+  };
+  paymentSuccessDetails?: {
+    amount: string;
+    reference: string;
+    ccd_case_number: string;
+    case_reference: string;
+    channel: string;
+    method: string;
+    status: string;
+    external_reference: string;
+    payment_group_reference: string;
+  };
 }
 
 export interface CaseWithDocuments {
@@ -66,10 +92,11 @@ export enum FieldPrefix {
 }
 
 export interface Case {
-  applicants?: Applicant[];
-  caseTypeOfApplication?: string;
-  typeOfApplication?: TYPE_OF_APPLICATION;
+  edgeCaseTypeOfApplication: TYPE_OF_APPLICATION;
+  caseTypeOfApplication: CASE_TYPE_OF_APPLICATION;
+  whomYouAreApplying: UserRole;
   namedApplicant: YesOrNo;
+  contactPreferenceType: ContactPreference;
   applicantFirstName: string;
   applicantLastName: string;
   applicantDateOfBirth: CaseDate;
@@ -79,7 +106,18 @@ export interface Case {
   applicantAddress1: string;
   applicantAddress2: string;
   applicantAddressTown: string;
-  applicantAddressCountry: any;
-  applicantAddressPostcode: any;
-  applicantStatementOfTruth: string;
+  applicantAddressCountry: string;
+  applicantAddressPostcode: string;
+  selectedCourtId?: string;
+  applicantApplicationFormDocuments: Document[] | [];
+  applicantAdditionalDocuments: Document[] | [];
+  paymentServiceRequestReferenceNumber?: string;
+  paymentReferenceNumber?: string;
+  helpWithFeesReferenceNumber?: string;
+  hwfPaymentSelection?: YesOrNo;
+  applicantStatementOfTruth: YesOrNo;
+  applicantCaseName: string;
+  lastModifiedDate: string;
+  caseCreatedBy: string;
+  applicationFee?: string;
 }

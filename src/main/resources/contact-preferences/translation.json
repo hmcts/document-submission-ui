@@ -6,8 +6,7 @@
             "label": "Where should we send emails about this application?",
             "hint": "We will only email important updates.",
             "accountOwner": "The account owner",
-            "namedPerson": "The person named on this application",
-            "bothReceiveEmail": "Both the account owner and the person named on this application"
+            "namedPerson": "The person named on this application"
         },
         "cy": {
             "continue": "Continue (in welsh)",
@@ -15,8 +14,7 @@
             "label": "Where should we send emails about this application? (in Welsh)",
             "hint": "We will only email important updates. (in Welsh)",
             "accountOwner": "The account owner (in Welsh)",
-            "namedPerson": "The person named on this application (in Welsh)",
-            "bothReceiveEmail": "Both the account owner and the person named on this application (in Welsh)"
+            "namedPerson": "The person named on this application (in Welsh)"
         }
     },
     "errors":{
