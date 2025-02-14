@@ -1,9 +1,9 @@
-# fis-ds-web - ithc
+# fis-ds-web
 
 
 ## Getting Started
 
-#### Prerequisites
+### Prerequisites
 
 Running the application requires the following tools to be installed in your environment:
 
@@ -11,7 +11,7 @@ Running the application requires the following tools to be installed in your env
 - [yarn](https://yarnpkg.com/)
 - [Docker](https://www.docker.com)
 
-#### Running application
+### Running application
 
 Install dependencies by executing the following command:
 
